@@ -1,0 +1,161 @@
+graphs:
+  - id: eeg_biomarkers
+    nodes:
+      # Subscribe to signals
+      # --------------------
+      - id: sub  # /!\ make sure you have a Broker amongst your graphs!  /!\
+        module: timeflux.nodes.zmq
+        class: Sub
+        params:
+          topics: [bitalino]
+
+      # Select channel with eeg sensor
+      # ------------------------------
+      - id: select
+        module: timeflux.nodes.query
+        class: LocQuery
+        params:
+          key: [A1]
+
+      #Define apps for feedback
+      # -----------------------
+      - id: ui
+        module: timeflux_ui.nodes.ui
+        class: UI
+        params:
+          routes:
+            eeg: apps/frontal_eeg
+
+      # Clean signal
+      # -------------
+      - id: notch
+        module: timeflux_dsp.nodes.filters
+        class: IIRFilter
+        params:
+          filter_type: bandstop
+          #          rate: 1000
+          frequencies: [45, 55]
+          order: 1
+
+      - id: bandpass
+        module: timeflux_dsp.nodes.filters
+        class: IIRFilter
+        params:
+          filter_type: bandpass
+          #          rate: 1000
+          frequencies: [1, 30]
+          order: 2
+
+      # Detect blinks
+      # -------------
+      - id: decimate
+        module: timeflux_dsp.nodes.filters
+        class: DropRows
+        params:
+          factor: 20
+
+      - id: blink
+        module: timeflux_dsp.nodes.squashing
+        class: Discretize
+        params:
+          default: 0.
+          range:
+            -1.: [[null, -50.]] # closing
+            1.: [[50., null]] # opening
+
+      #  extract band powers
+      # --------------------
+      - id: filter_bank
+        module: timeflux_dsp.nodes.filters
+        class: FilterBank
+        params:
+          filters:
+            'delta': {frequencies: [1, 4], order: 3}
+            'theta': {frequencies: [5, 7], order: 3}
+            'alpha': {frequencies: [8, 12], order: 3}
+            'beta':  {frequencies: [13, 20], order: 3}
+            'gamma': {frequencies: [25, 40], order: 3}
+          #          rate: 1000 # todo:  rather get from meta
+          design: butter
+
+      - id: band_powers
+        module: modules.nodes.power
+        class: Power
+        params:
+          length: 3
+          step: 1
+
+      - id: total_power
+        module: modules.nodes.power
+        class: Power
+        params:
+          length: 3
+          step: 1
+
+      - id: divide
+        module: modules.nodes.on_ports
+        class: Divide
+
+      # Eventually, publish some streams to save them
+      # ---------------------------------------------
+      - id: pub_filtered
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: eeg_filtered
+      - id: pub_powers
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: eeg_powers
+      # for debug purpose
+      # ------------------
+      - id: display
+        module: timeflux.nodes.debug
+        class: Display
+
+    edges:
+      - source: sub:bitalino
+        target: select
+      - source: select
+        target: ui:eeg_raw
+      - source: select
+        target: notch
+      - source: notch
+        target: bandpass
+      - source: bandpass
+        target: ui:eeg_filtered
+
+      - source: bandpass
+        target: decimate
+      - source: decimate
+        target: blink
+      - source: blink
+        target: ui:blink
+
+      - source: bandpass
+        target: filter_bank
+      - source: filter_bank
+        target: ui:eeg_bands
+      - source: filter_bank
+        target: band_powers
+      - source: band_powers
+        target: divide:num
+      - source: bandpass
+        target: total_power
+      - source: total_power
+        target: divide:den
+
+      - source: band_powers
+        target: ui:eeg_absolute_powers
+      - source: divide
+        target: ui:eeg_relative_powers
+
+      - source: notch
+        target: pub_filtered
+      - source: band_powers
+        target: pub_powers
+
+    #      - source: bandpass
+    #        target: display
+    rate: 10
