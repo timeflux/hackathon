@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script defer src="/common/assets/js/timeflux.js"></script>
+    <script defer src="assets/app.js"></script>
+    <link rel="stylesheet" href="assets/app.css">
+    <link rel="stylesheet" href="/common/assets/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+    <div class="container" id="brain-wave-container">
+        <h1 class="title">Brain Wave</h1>
+        <div class="wrapper">
+            <table id="brain_waves" class="table is-bordered is-striped is-narrow is-fullwidth">
+                <thead>
+                <th>Bands</th>
+                <th>States</th>
+                <th>Absolute</th>
+                <th>Relative</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Delta (< 4Hz)</td>
+                    <td>Uncounsious</td>
+                    <td id="delta_absolute"></td>
+                    <td id="delta_relative"></td>
+                </tr>
+                <tr>
+                    <td>Theta (4-7Hz)</td>
+                    <td>Meditate</td>
+                    <td id="theta_absolute"></td>
+                    <td id="theta_relative"></td>
+                </tr>
+                <tr>
+                    <td>Alpha (8-12Hz)</td>
+                    <td>Relaxed</td>
+                    <td id="alpha_absolute"></td>
+                    <td id="alpha_relative"></td>
+                </tr>
+                <tr>
+                    <td>Beta (13-25Hz)</td>
+                    <td>Alert</td>
+                    <td id="beta_absolute"></td>
+                    <td id="beta_relative"></td>
+                </tr>
+                <tr>
+                    <td>Gamma (25, 40)</td>
+                    <td>Cognitive processing</td>
+                    <td id="gamma_absolute"></td>
+                    <td id="gamma_relative"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+<section class="section">
+    <div class="container" id="blink-container">
+        <h1 class="title">Blinks</h1>
+        <div class="wrapper">
+            <div class='eye'>
+                <div class='shut'>
+                    <span></span>
+                    <div class='eye-ball'>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
+
+
+
+
