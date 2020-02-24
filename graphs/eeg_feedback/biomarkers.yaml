@@ -9,6 +9,12 @@ graphs:
         params:
           topics: [bitalino]
 
+      # Convert to physical unit
+      # -------------------------
+      - id: convert
+        module: modules.nodes.conversion
+        class: ConvertUnit
+
       # Select channel with eeg sensor
       # ------------------------------
       - id: select
@@ -24,7 +30,7 @@ graphs:
         class: UI
         params:
           routes:
-            eeg: apps/frontal_eeg
+            eeg: apps/eeg_feedback
 
       # Clean signal
       # -------------
@@ -108,6 +114,7 @@ graphs:
         class: Pub
         params:
           topic: eeg_powers
+
       # for debug purpose
       # ------------------
       - id: display
@@ -116,6 +123,8 @@ graphs:
 
     edges:
       - source: sub:bitalino
+        target: convert
+      - source: convert
         target: select
       - source: select
         target: ui:eeg_raw

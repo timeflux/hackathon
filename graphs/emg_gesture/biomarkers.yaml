@@ -34,7 +34,7 @@ graphs:
         class: UI
         params:
           routes:
-            emg: apps/emg_activation
+            emg: apps/emg_gesture
           settings:
             roshambo:
               fixation_duration: 1000

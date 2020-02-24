@@ -1,7 +1,0 @@
-
-import:
-  - broker.yaml
-#  - bitalino.yaml # comment this line to run on replayed data
-  - emg_activation/replay.yaml # comment this line to run with bitalino device
-  - emg_activation/biomarkers.yaml
-  - emg_activation/save.yaml

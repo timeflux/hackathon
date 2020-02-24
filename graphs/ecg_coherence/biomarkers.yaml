@@ -8,7 +8,14 @@ graphs:
         module: timeflux.nodes.zmq
         class: Sub
         params:
-          topics: [bitalino]
+          topics: [bitalino, events]
+
+      # Convert to physical unit
+      # -------------------------
+      - id: convert
+        module: modules.nodes.conversion
+        class: ConvertUnit
+
       # Select channel with eeg sensor
       # ------------------------------
       - id: select
@@ -24,7 +31,7 @@ graphs:
         class: UI
         params:
           routes:
-            cardiac_coherence: apps/cardiac_coherence
+            cardiac_coherence: apps/ecg_coherence
           settings:
             circle:
               transition:
@@ -131,6 +138,8 @@ graphs:
 
     edges:
       - source: sub:bitalino
+        target: convert
+      - source: convert
         target: select
       - source: select
 

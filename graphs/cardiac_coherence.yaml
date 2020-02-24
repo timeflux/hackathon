@@ -1,6 +1,0 @@
-import:
-  - broker.yaml
-#  - bitalino.yaml # comment this line to run on replayed data
-  - cardiac_coherence/replay.yaml # comment this line to run with bitalino device
-  - cardiac_coherence/biomarkers.yaml
-  - cardiac_coherence/save.yaml
