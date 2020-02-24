@@ -6,12 +6,22 @@ import json
 
 
 class Power(Window):
-    """ Average of squared samples on a moving window"""
+    """ Average of squared samples on a moving window
+        Attributes:
+            i (Port): Default input, expects DataFrame.
+            o (Port): Default output, provides DataFrame and meta.
+
+        Args:
+            length (float): Window length
+            step (float): Step length
+            average (mean|median) : Average method
+    """
 
     def __init__(self,
                  length,
                  step,
                  average='median'):
+
         super(self.__class__, self).__init__(length=length, step=step)
         if average == 'mean':
             self._average_method = np.median

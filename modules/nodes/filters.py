@@ -5,15 +5,14 @@ from timeflux.nodes.window import Window
 
 
 class MovingAverage(Window):
-    """ TODO
-    XXX
+    """ Average the data on a rolling window
     Attributes:
         i (Port): Default input, expects DataFrame.
         o (Port): Default output, provides DataFrame and meta.
 
     Args:
-       length (float): The length of the window, in seconds.
-        closed (str):
+        length (float): The length of the window, in seconds.
+        closed (str): Output row with either fiirst (`left`), last (`right`) or middle (`center`) index
     """
 
     def __init__(self, length, step, closed='right'):
@@ -47,6 +46,18 @@ class MovingAverage(Window):
 
 
 class RecursiveScaler(Node):
+    """ Scale data with recursively updated parameters (min, max, mean..)
+        Attributes:
+        i (Port): Default input, expects DataFrame.
+        o (Port): Default output, provides DataFrame and meta.
+
+    Args:
+        method (str): Method of scaling (minmax or mean)
+        kxargs (kwargs): Depends on the chosen smethod
+            If minmax, one can et the limit range.
+            If standard, one can choose either to scale with centering and/or scaling
+    """
+
     def __init__(self, method="minmax", **kwargs):
         self._range = kwargs.get('limits')
         self._with_scaling = kwargs.get('with_scaling') or True
@@ -57,6 +68,8 @@ class RecursiveScaler(Node):
     def update(self):
         if not self.i.ready():
             return
+        # copy the data and the meta
+        self.o = self.i
         if self._method == "minmax":
             if self._range is not None:
                 self.i.data[self.i.data > self._range[1]] = self._range[1]
@@ -71,6 +84,11 @@ class RecursiveScaler(Node):
             self._mean = self._signal_sum / self._n
             self._std = np.sqrt((self._sum / self._n))
 
+            if self._with_centering:
+                self.o.data -= self._mean
+            if self._with_centering:
+                self.o.data /= self._std
+
     def reset(self):
         self._max = - np.inf
         self._min = np.inf
@@ -82,6 +100,15 @@ class RecursiveScaler(Node):
 
 class DropOutsider(Node):
     """ Mask data outside range
+    Attributes:
+        i (Port): Default input, expects DataFrame.
+        o (Port): Default output, provides DataFrame and meta.
+
+    Args:
+        left (float|None): left boundary
+        right (float|None): right boundary
+        include (bool): is inequality should be strict or not
+        drop (bool): if True, samples outside range are dropped. Else, they're set to NaN.
     """
 
     def __init__(self, left=None, right=None, include=False, drop=True):
@@ -93,7 +120,7 @@ class DropOutsider(Node):
     def update(self):
         if not self.i.ready():
             return
-
+        # copy the data and the meta
         self.o = self.i
 
         if self._include:

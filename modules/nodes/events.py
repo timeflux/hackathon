@@ -5,20 +5,37 @@ from timeflux.core.node import Node
 
 
 class SerializeColumn(Node):
+    """ Serialize one column
+    Attributes:
+        i (Port): Default input, expects DataFrame.
+        o (Port): Default output, provides DataFrame and meta.
+    Args:
+        column (str): Column with data to serialize
+        meta_keys, labels=None, drop_label
+    """
 
-    def __init__(self, column_name='data'):
+    def __init__(self, column='data'):
         super().__init__()
-        self.column_name = column_name
+        self._column = column
 
     def update(self):
         if not self.i.ready():
             return
+        # copy the data and the meta
         self.o = self.i
-        self.o.data[self.column_name] = self.o.data[self.column_name].apply(lambda d: json.dumps(d))
+        self.o.data[self._column] = self.o.data[self._column].apply(lambda d: json.dumps(d))
 
 
 class ToSignal(Node):
-    """ Extract meta from event and  convert in a signal
+    """ Serialize one column
+    Attributes:
+        i (Port): Default input, expects DataFrame.
+        o (Port): Default output, provides DataFrame and meta.
+    Args:
+        meta_keys (list): List of meta keys to get value from
+        labels (list|None): List of labels to match
+        drop_label (bool): Whether or not to drop the label column
+
     Example:
     -------
     >>> events = tm.makeTimeDataFrame(5, freq='L').rename(columns={'A': 'label', 'B': 'data'})
@@ -40,11 +57,9 @@ class ToSignal(Node):
         2000-01-01 00:00:00.001   bar  2  20.0
         2000-01-01 00:00:00.000   foo  1  10.0
         2000-01-01 00:00:00.004   foo  1   NaN
-
-
     """
 
-    def __init__(self, meta_keys, labels=None, label_column='label', meta_column='data', drop_label=True):
+    def __init__(self, meta_keys, labels=None, drop_label=True):
         super().__init__()
         if isinstance(labels, str):
             labels = [labels]
@@ -52,25 +67,24 @@ class ToSignal(Node):
         if isinstance(meta_keys, str):
             meta_keys = [meta_keys]
         self._meta_keys = meta_keys
-        self._label_column = label_column
-        self._meta_column = meta_column
         self._drop_label = drop_label
 
     def update(self):
         if not self.i.ready():
             return
 
+        # copy the data and the meta
         self.o = self.i
         if self._labels is not None:
-            idx = self.i.data[self._label_column].isin(self._labels)
+            idx = self.i.data.label.isin(self._labels)
             self.i.data = self.i.data.loc[idx]
 
         selected_meta = pd.DataFrame(index=self.i.data.index, columns=self._meta_keys)
 
         for meta_key in self._meta_keys:
-            selected_meta[meta_key] = [a[meta_key] for a in self.i.data[self._meta_column].values]
+            selected_meta[meta_key] = [a[meta_key] for a in self.i.data['data'].values]
 
         self.o.data = selected_meta
 
         if not self._drop_label:
-            self.o.data = pd.concat([self.i.data[[self._label_column]], self.o.data], axis=1)
+            self.o.data = pd.concat([self.i.data[['label']], self.o.data], axis=1)
