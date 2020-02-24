@@ -1,0 +1,52 @@
+graphs:
+  - id: hello_sinus
+    nodes:
+      - id: carrier_sinus
+        module: timeflux_example.nodes.sinus
+        class: Sinus
+        params:
+          rate: .5
+          amplitude: 1
+#          name: carrier
+
+      - id: noise_sinus
+        module: timeflux_example.nodes.sinus
+        class: Sinus
+        params:
+          rate: 5
+          amplitude: .1
+#          name: noise
+
+      # part 1
+      - id: add_sinus
+        module: timeflux_example.nodes.arithmetic
+        class: MatrixAdd
+
+
+      # part 2
+      # TODO: add a lowpass filter to filter the summed signal
+      # Hint: https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html
+
+      # part 3
+      # TODO: add an UI to monitor the signal before and after filtering
+
+      # for debug purpose
+      # -----------------
+      - id: display
+        module: timeflux.nodes.debug
+        class: Display
+    edges:
+      # part 1
+      - source: carrier_sinus
+        target: add_sinus:m1
+      - source: noise_sinus
+        target: add_sinus:m2
+#      - source: add_sinus
+#        target: display
+
+#      # part 2
+      # TODO: plug the summed signal to the filter
+
+      # part 3
+      # TODO: plug the signals to the UI
+    rate: 32
