@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
+from timeflux.core.node import Node
 from timeflux.nodes.window import Window
 
 
 class MovingAverage(Window):
     """ TODO
-    XXX TODO
+    XXX
     Attributes:
         i (Port): Default input, expects DataFrame.
         o (Port): Default output, provides DataFrame and meta.
@@ -35,11 +36,72 @@ class MovingAverage(Window):
         if self.o.ready():
             if self._closed == 'right':
                 closed_index = -1
-            elif self._closed =='left':
+            elif self._closed == 'left':
                 closed_index = 0
-            else: # center
-                closed_index = len(self.i.data)//2
+            else:  # center
+                closed_index = len(self.i.data) // 2
             time = self.i.data.index[closed_index]
             self.o.data = pd.DataFrame(np.mean(self.o.data.values, axis=0).reshape(1, -1),
-                                        index=[time],
-                                        columns=self._columns )
+                                       index=[time],
+                                       columns=self._columns)
+
+
+class RecursiveScaler(Node):
+    def __init__(self, method="minmax", **kwargs):
+        self._range = kwargs.get('limits')
+        self._with_scaling = kwargs.get('with_scaling') or True
+        self._with_centering = kwargs.get('_with_centering') or True
+        self._method = method
+        self.reset()
+
+    def update(self):
+        if not self.i.ready():
+            return
+        if self._method == "minmax":
+            if self._range is not None:
+                self.i.data[self.i.data > self._range[1]] = self._range[1]
+                self.i.data[self.i.data > self._range[0]] = self._range[0]
+            # estimate min/max of samples distribution recursively
+            self._max = np.maximum(self._max, self.i.data.max())
+            self._min = np.minimum(self._min, self.i.data.min())
+            self.o.data = (self.i.data - self._min) / (self._max - self._min)
+        else:  # self._method == "standard":
+            # estimate mean/std of samples distribution recursively
+            self._sum += self.i.data.sum()
+            self._mean = self._signal_sum / self._n
+            self._std = np.sqrt((self._sum / self._n))
+
+    def reset(self):
+        self._max = - np.inf
+        self._min = np.inf
+        self._n = 0
+        self._sum = 0
+        self._mean = 0
+        self._std = 0
+
+
+class DropOutsider(Node):
+    """ Mask data outside range
+    """
+
+    def __init__(self, left=None, right=None, include=False, drop=True):
+        self._left = left or -np.inf
+        self._right = right or +np.inf
+        self._include = include
+        self._drop = drop
+
+    def update(self):
+        if not self.i.ready():
+            return
+
+        self.o = self.i
+
+        if self._include:
+            _mask = (self.i.data <= self._left) | (self.i.data >= self._right)
+        else:
+            _mask = (self.i.data < self._left) | (self.i.data > self._right)
+
+        if self._drop and np.sum(_mask[:].values) > 0:
+            self.o.data = None
+        else:
+            self.o.data[_mask.values] = np.NaN
