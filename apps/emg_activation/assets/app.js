@@ -17,7 +17,8 @@ let gaugeOptions = {
         color: '#ccc'
     },
     limitMax: 'false',
-    percentColors: [[0.0, "#ffe74b"],
+    percentColors:
+        [[0.0, "#ffe74b"],
         [0.20, "#ffc04b"],
         [0.40, "#ff8a4b"],
         [0.60, "#ff5d4b"],
@@ -25,11 +26,11 @@ let gaugeOptions = {
     strokeColor: '#E0E0E0',
     generateGradient: true
 };
+
 let target = document.getElementById('gauge');
 let gauge = new Gauge(target).setOptions(gaugeOptions);
-gauge.maxValue = 1;
-gauge.set(.5);
 
+gauge.maxValue = 1;
 
 load_settings().then(settings => {
     options = settings.roshambo;
@@ -67,10 +68,16 @@ io.on('events', (data, meta) => {
     }
 });
 
+io.subscribe('emg_burst');
 io.on('emg_burst', (data) => {
+    let avg_activation = 0;
     let row = data[Object.keys(data)[Object.keys(data).length - 1]]; // Last row
-    let column = Object.keys(row)[0]; // First column
-    let value = row[column]; // Value between 0 and 1
-    console.log(value); // For debugging purposes
-    gauge.set(value);
+    let n_columns = Object.keys(row).length;
+    for (let column in row) {
+        // Display feature value in table
+        let value = row[column];
+        document.getElementById(column).innerHTML = (value * 100).toFixed() + "%";
+        avg_activation = avg_activation + value
+    }
+    gauge.set(avg_activation / n_columns);
 });
