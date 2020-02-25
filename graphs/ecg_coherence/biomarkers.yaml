@@ -31,7 +31,7 @@ graphs:
         class: UI
         params:
           routes:
-            cardiac_coherence: apps/ecg_coherence
+            ecg_coherence: apps/ecg_coherence  # now open http://localhost:8000/ecg_coherence/
           settings:
             circle:
               transition:
