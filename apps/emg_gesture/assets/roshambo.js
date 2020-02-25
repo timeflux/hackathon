@@ -16,20 +16,16 @@ class Roshambo {
                 'calibration_rounds': 2,
                 'fixation_duration': 2000,
                 'trial_duration': 7000,
-                'highlight_duration': 1500,
-                'ids': ['rock', 'paper', 'scissors', 'rest']
             }
         ;
+        this.ids = ['rock', 'paper', 'scissors', 'rest'];
         this.options = merge(default_options, options);
+        // Request DOM elements to be updated
+        this._element_fixation_cross = document.getElementById('fixation_cross');
+        this._element_question = document.getElementById('question');
+        this._element_choices = {};
+        this.ids.forEach(id => this._element_choices[id] = document.getElementById(id))
 
-        // Initialize
-        // this._init();
-
-        // Get HTML elements for faster access
-        this._cells = {};
-        for (let id in this.options.targets) {
-            this._cells[id] = document.getElementById(id);
-        }
     }
 
     /**
@@ -37,25 +33,23 @@ class Roshambo {
      */
     async calibrate() {
         this.io.event('calibration_starts');
-        // this.io.event('calibration-baseline_starts');
-        // await sleep(this.options.calibration.baseline_duration);
-        // this.io.event('calibration-baseline_stops');
-        let ids = this.options.ids;
         for (let i = 0; i < this.options.calibration_rounds; i++) {
-            this._shuffle(ids);
-            for (const id of ids) {
+            this._shuffle(this.ids);
+            for (const id of this.ids) {
                 let meta = {'id': id};
-                document.getElementById('fixation_cross').classList.toggle('show');
+                // show fixation cross
+                this._element_fixation_cross.classList.toggle('show');
                 await sleep(this.options.fixation_duration);
+                // send an event for trial onset
                 this.io.event('trial_starts', meta);
-                // show image
-                document.getElementById('fixation_cross').classList.toggle('show');
-                document.getElementById(id).classList.toggle('show');
+                // hide cross and show image
+                this._element_fixation_cross.classList.toggle('show');
+                this._element_choices[id].classList.toggle('show');
                 await sleep(this.options.trial_duration);
-                // hide image
+                // send an event for trial offset
                 this.io.event('trial_stops', meta);
                 // stop showing
-                document.getElementById(id).classList.toggle('show');
+                this._element_choices[id].classList.toggle('show');
             }
         }
         this.io.event('calibration_stops');
@@ -70,17 +64,16 @@ class Roshambo {
         await sleep(this.options.fixation_duration);
         this.io.event('trial_starts', meta);
         // hide all choices
-
+        this._init();
         // show image question
-        document.getElementById('question').classList.toggle('show');
+        this._element_question.classList.toggle('show');
 
         await sleep(this.options.trial_duration);
         // hide image
         this.io.event('trial_stops', meta);
-        // listen to prediction
-        // todo
+
         // hide question and show predicted image
-        document.getElementById('question').classList.toggle('show');
+        this._element_question.classList.toggle('show');
         // send event prediction stops
         this.io.event('classify_stops');
     }
@@ -101,12 +94,11 @@ class Roshambo {
             [array[i], array[j]] = [array[j], array[i]];
         }
     }
-    _init(){
-        var elements = document.getElementsByClassName('choice');
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].classList.remove('show');
-            }
+
+    _init() {
+        const elements = document.getElementsByClassName('choice');
+        elements.forEach(function (element_choice) {
+            element_choice.classList.remove('show');
+        });
     }
-
 }
-

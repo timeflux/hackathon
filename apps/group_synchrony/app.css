@@ -1,0 +1,21 @@
+svg {
+    display: block;
+}
+
+polygon {
+    fill: #41B883;
+    transition: fill 3s ease-in-out;
+
+}
+
+circle {
+    fill: transparent;
+    stroke: #35495E;
+
+}
+
+#container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,15 +1,33 @@
 'use strict';
 
 let io = new IO();
-let container = document.getElementById('circle-container');
 
+// Prepare elements from DOM
+let _td_features = {};
+const columns = ['bpm', 'lf', 'hf', 'lf/hf']; // columns of EMG activation bursts
+columns.forEach(function (column) {
+    _td_features[column] = document.getElementById(column);
+});
+const td_bpm = document.getElementById('bpm');
+const _gradientColors =
+    [[.0, .15, "#ff3030"],
+        [.15, .30, "#ff5d4b"],
+        [.30, .45, "#ff8a4b"],
+        [.45, .60, "#ffc04b"],
+        [.60, .75, "#ffe74b"],
+        [.75, .90, "#9aff26"],
+        [.90, 1.1, "#02ff8a"],
+    ];
+let container = document.getElementById('circle-container');
 var max = 0;
 var min = 0;
 var column_color = null;
 
+// Resize circle on window
 resize();
 window.onresize = resize;
 
+// Load settings from timeflux graph
 load_settings().then(settings => {
     let default_settings = {
         'circle': {
@@ -23,6 +41,7 @@ load_settings().then(settings => {
     set_css_var('--color-transition', settings.circle.transition.color);
 });
 
+// On connect, subscribe to usefull streams
 io.on('connect', () => {
     console.log('connected');
     io.subscribe('rr_interval');
@@ -30,7 +49,7 @@ io.on('connect', () => {
 
 });
 
-
+// RR interval defines the circle radius
 io.on('rr_interval', (data) => {
     let row = data[Object.keys(data)[Object.keys(data).length - 1]]; // Last row
     let column = Object.keys(row)[0]; // First column
@@ -43,15 +62,16 @@ io.on('rr_interval', (data) => {
 
     // Display BPM value in table
     let bpm = 60 / value;
-    document.getElementById('bpm').innerHTML = bpm.toFixed(0) + ' bpm';
+    td_bpm.innerHTML = bpm.toFixed(0) + ' bpm';
 });
 
+// lf/hf (coherence) level  defines the circle color gradient
 io.on('cardiac_features', (data) => {
     let row = data[Object.keys(data)[Object.keys(data).length - 1]]; // Last row
 
     for (let column in row) {
         // Display feature value in table
-        document.getElementById(column).innerHTML = row[column].toFixed(2);
+        _td_features[column].innerHTML = row[column].toFixed(2);
     }
     // Set circle color from the chosen feature
     let value = row[column_color]; // Value between 0 and 1
@@ -67,15 +87,6 @@ Number.prototype.between = function (a, b, inclusive = true) {
     return inclusive ? this >= min && this <= max : this > min && this < max;
 };
 
-let _gradientColors =
-    [[.0, .15, "#ff3030"],
-        [.15, .30, "#ff5d4b"],
-        [.30, .45, "#ff8a4b"],
-        [.45, .60, "#ffc04b"],
-        [.60, .75, "#ffe74b"],
-        [.75, .90, "#9aff26"],
-        [.90, 1.1, "#02ff8a"],
-    ];
 
 /**
  * Return color gradient

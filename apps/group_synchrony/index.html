@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ONE polygon</title>
+    <h1 class="title is-centered">Make in one!</h1>
+    <script src="/common/assets/js/timeflux.js"></script>
+    <script src="/common/assets/js/vue.js"></script>
+
+    <script defer src="assets/app.js"></script>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="container">
+    <svg width="200" height="200">
+        <polygon id="elt-polygon" :points="points"></polygon>
+        <circle cx="100" cy="100" r="90"></circle>
+    </svg>
+</div>
+</body>
+</html>
+
+
