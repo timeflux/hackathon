@@ -28,10 +28,10 @@ You have 48 hours, in a team of five, to developp an application/experiment/inst
 
 Choose your track amongst the followings:
 
-- Noise tagging BCI (occiptal) — MindAffect + OpenBCI
-- Neurofeedback (pre-frontal, bipolar) — Bitalino
-- Cardiac coherence (ECG, PPG) — Bitalino
-- Gestures (EMG) — Bitalino
+1. Noise tagging BCI (occiptal) — MindAffect + OpenBCI
+2. Neurofeedback (pre-frontal, bipolar) — Bitalino
+3. Cardiac coherence (ECG, PPG) — Bitalino
+4. Gestures (EMG) — Bitalino
 
 ## Organization 
 ### Teams inscriptions
@@ -63,27 +63,108 @@ Once you have everything ready (git, anaconda and timeflux installed), you may c
 git clone https://github.com/timeflux/hackathon
 ```
 
-## Repository organization
-In this repo
+- If you still need to install a timeflux conda environment: 
+
+```
+> cd hackathon
+> conda env create -f environment.yaml
+> conda activate timeflux
+```
+- If you already have a timeflux environment, install some additionnal packages: 
+
+```
+> cd hackathon
+> conda activate timeflux
+timeflux > pip install -r requirements.txt 
+```
+
+## Repository structure
+In this repository, you'll find everything you need to follow the masterclass and to start the hackathon project. 
+
 ### App
+App is structured 'by tracks', ie. for each folder of the repository, you'll find a subfolder corresponing to one track. 
+ 
 ### Data
+Here, you'll find HDF5 files to replay and eventually, you'll store your own data there as well. 
+
 ### Exercises
+Here, you'll find the material for the Masterclass exercises: 
+
+- [Exercise 1](exercises/Exercise 1 - Your very first graph.md): Run your very first graph with timeflux
+- [Exercise 2](exercises/Exercise 2 - Playing with waves .md): Edit a YAML graph, play-around with sinus and learn more advance features step by step: 
+	1. Learn to use multiple ports 
+	2. Practice basic filtering with dsp pluggin
+	3. Display your signal in the UI
+	4. Save your data into a file and understand ZMQ purpose for multiple graph
+	5. (bonus) Play around with the parameters to avoid pitfalls. 
+
+	todo: add circle in bonus
+
 ### Graphs
+- the main graph are named by tracks and imports some graph located in `graphs/subgraph` directory
+- `subgraphs` folder is structured 'by tracks', ie. for each folder of the repository, you'll find subfolder corresponing to one track.
+	
 ### Modules
+When developping your own application, you often need to design custom nodes for your specific needs. 
+See how its done [here](https://github.com/timeflux/timeflux_example/blob/master/timeflux_example/nodes/arithmetic.py) with a very simple node that adds a value to your data. 
+
+This folder is a Python Pacquage containing usefull nodes for these exemple applications. Some of them (if used by more than 2/3 applications) will 
+then be integrated to timeflux pluggins. 
 
 ## Hackathon
 ### Hardware
+- Bitalino: for tracks #2 ([eeg sensors](https://bitalino.com/datasheets/REVOLUTION_EEG_Sensor_Datasheet.pdf)), #3 ([ecg sensors](https://bitalino.com/datasheets/REVOLUTION_ECG_Sensor_Datasheet.pdf)), #4. ([emg sensors](https://bitalino.com/datasheets/REVOLUTION_EMG_Sensor_Datasheet.pdf)). 
+![device-bitalino](exercises/img/device_bitalino.png)
+
+**NB:** There's a *direction* for plugging in the sensor. 
+
+**NBB:** The sensor are bipolar, that is you have 3 electrodes: ground (white), IN- (black), IN+(red). 
+
+- OpenBCI + MindAffect: for track #1 
+![device-ganglion](exercises/img/device_ganglion.png)
+
 
 ### Tracks
 #### Noise tagging BCI (occiptal) — MindAffect + OpenBCI
+#### Pitch
+*"With this solution, one wears a headset that measures electrical brain activity. Through visually directing one’s attention at specifically designed stimulus, the BCI matches the brain signals with the stimulus."*
+
+#### Demo 
+![demo-mindaffecr](exercises/img/demo_mindaffect.gif)
+
+See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100-create-your-own-brain-computer-interface). 
 
 #### Neurofeedback (pre-frontal, bipolar) — Bitalino
+##### Sensor montage
+![eeg-frontal-montage](exercises/img/eeg_frontal_montage.png)
+
+#### Pitch
+
+
+#### Demo 
+![demo-frontal-eeg](exercises/img/demo_eeg.gif)
+
 
 #### Cardiac coherence (ECG, PPG) — Bitalino
+##### Sensor montage
+![ecg-montage](exercises/img/montage_ecg.png)
+
+#### Pitch
+*"Learn to control this circle biofeedback and create a coherent state in about a minute. Using your respiration to balance your heart, thoughts and emotions, you can achieve energy, inner harmony and feel better fast anywhere. "*
+#### Demo 
+![demo-coherence-ecg](exercises/img/demo_coherence.gif)
+
 
 #### Gestures (EMG) — Bitalino
+##### Sensor montage
+![emg-montage](exercises/img/montage_emg.png)
 
-------
+#### Pitch
+*" Play Rock, Paper, Scissor on your computer without touching a mouse or a keyboard. 
+Here is a new kind of man-machine interface, which has never brought us closer to the spirit of the film Minority Report..."*
+#### Demo 
+![demo-frontal-eeg](exercises/img/demo_gesture.gif)
+
 
 # Getting help 
 ## Community
@@ -121,7 +202,7 @@ In this repo
 command not found: timeflux
 
 - **High filter order and induced delay & phase distortions:**
- IIRFilter is a nonlinear phase filter (in passband), it distorts the frequency contents of passband region of signal. Get convinced yourself with [bonus part of exercise 2.](exercises/Exercise 1 - Your very first graph.md). 
+ IIRFilter is a nonlinear phase filter (in passband), it distorts the frequency contents of passband region of signal. Get convinced yourself with [bonus part of exercise 2.](exercises/Exercise 2 - Playing with waves .md). 
  ![phase-disturb](exercises/img/hello_sinus_phaseshift_screenshot.png)
  
 - **Windowing** (the slower, the smoother): Real time is a lie, we do **pseudo-real-time**. Indeed,  Machine learning pipelines usually require the extraction of features that have the ability to represent each class in a representative way in order to be possible to distinguish them. For example, we can use windows of 1 second with or without overlap and represent each of these windows by a set of features, such as the mean, standard deviation, among others. We achieve this by using the [Window](https://doc.timeflux.io/latest/api/timeflux.nodes.window.html) node of timeflux. There are two ways of managing windowed extraction: 
