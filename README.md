@@ -14,7 +14,7 @@ Thanks to everybody for making this event possible:
 - [NeurotechX/Coglab](https://neurotechx.com/) for the talks and staff  
 - [Talent.io](https://www.talent.io/fr/) for the prizes
 - [Open Mind Innovation](https://lab.omind.me/) for the continuous support
-- **[42 School of course](https://www.42.fr/)** (especially Sophie, Benny and Fabienne) for support, accomodation & co! 
+- **[42 School of course](https://www.42.fr/)** (especially Sophie, Benny, Fabienne and Charles) for support, accomodation & co! 
 
 
 ## What should you expect from the hackathon?
