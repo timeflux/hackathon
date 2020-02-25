@@ -138,10 +138,14 @@ See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100
 
 #### Neurofeedback (pre-frontal, bipolar) — Bitalino
 ##### Sensor montage
+
+You need to plug the EEG sensor at input A1 of Bitalino and place the IN+ and IN- electrodes (black and red) on your forehead and the mass on the bone behind your ear, as follow:
+
+
 ![eeg-frontal-montage](exercises/img/eeg_frontal_montage.png)
 
 #### Pitch
-
+*"Make your drone fly and land just by looking up and down, communicate through blink-morse or focus and listen to your inner music played by your brain waves. There are so many things we can achieve with a simple sensor on the forehead!"*
 
 #### Demo 
 ![demo-frontal-eeg](exercises/img/demo_eeg.gif)
@@ -149,7 +153,11 @@ See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100
 
 #### Cardiac coherence (ECG, PPG) — Bitalino
 ##### Sensor montage
+You need to plug the ECG at inpuut A1 of Bitalino and place the electrode as follow: 
+
  <img src="exercises/img/montage_ecg.png" width="40%">
+ 
+/!\ If you revert the IN+ (red) and IN-(black) electrodes, the ECG QRS will be inverted and the cardiac peaks won't be estimated correctly.   
 
 #### Pitch
 *"Learn to control this circle biofeedback and create a coherent state in about a minute. Using your respiration to balance your heart, thoughts and emotions, you can achieve energy, inner harmony and feel better fast anywhere. "*
@@ -159,6 +167,8 @@ See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100
 
 #### Gestures (EMG) — Bitalino
 ##### Sensor montage
+
+You need to plug the EMG sensors at input A1 and A2 of Bitalino and place the electrodes as follow: 
 
  <img src="exercises/img/montage_emg.png" width="40%">
  
