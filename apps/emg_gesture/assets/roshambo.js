@@ -68,12 +68,26 @@ class Roshambo {
         // show image question
         this._element_question.classList.toggle('show');
 
-        await sleep(this.options.trial_duration);
-        // hide image
+        //await sleep(this.options.trial_duration);
+        // Display prediction
+        this.io.on('events', (data, meta) => {
+            for (let timestamp in data) {
+                try {
+                    if (data[timestamp]['label'] == 'predict') {
+                        data = JSON.parse(data[timestamp].data);
+                        // hide question
+                        this._init();
+                        // display classification result
+                        this._element_choices[data.result].classList.toggle('show');
+                    }
+                } catch (e) {
+                }
+            }
+        });
+
         this.io.event('trial_stops', meta);
 
-        // hide question and show predicted image
-        this._element_question.classList.toggle('show');
+        // this._element_question.classList.toggle('show');
         // send event prediction stops
         this.io.event('classify_stops');
     }
@@ -97,8 +111,8 @@ class Roshambo {
 
     _init() {
         const elements = document.getElementsByClassName('choice');
-        elements.forEach(function (element_choice) {
-            element_choice.classList.remove('show');
-        });
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.remove('show');
+        }
     }
 }

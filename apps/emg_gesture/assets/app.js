@@ -91,16 +91,3 @@ async function classify() {
     start_button.disabled = false
 }
 
-// Display prediction
-io.on('events', (data, meta) => {
-    for (let timestamp in data) {
-        try {
-            if (data[timestamp]['label'] == 'predict') {
-                data = JSON.parse(data[timestamp].data);
-                roshambo._element_choices[id].classList.toggle('show');
-            }
-        } catch (e) {
-        }
-    }
-});
-
