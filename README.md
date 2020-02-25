@@ -114,14 +114,16 @@ then be integrated to timeflux pluggins.
 ## Hackathon
 ### Hardware
 - Bitalino: for tracks #2 ([eeg sensors](https://bitalino.com/datasheets/REVOLUTION_EEG_Sensor_Datasheet.pdf)), #3 ([ecg sensors](https://bitalino.com/datasheets/REVOLUTION_ECG_Sensor_Datasheet.pdf)), #4. ([emg sensors](https://bitalino.com/datasheets/REVOLUTION_EMG_Sensor_Datasheet.pdf)). 
-![device-bitalino](exercises/img/device_bitalino.png)
 
+ <img src="exercises/img/device_bitalino.png" width="60%">
+ 
 **NB:** There's a *direction* for plugging in the sensor. 
 
 **NBB:** The sensor are bipolar, that is you have 3 electrodes: ground (white), IN- (black), IN+(red). 
 
 - OpenBCI + MindAffect: for track #1 
-![device-ganglion](exercises/img/device_ganglion.png)
+
+ <img src="exercises/img/device_ganglion.png" width="40%">
 
 
 ### Tracks
@@ -147,7 +149,7 @@ See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100
 
 #### Cardiac coherence (ECG, PPG) — Bitalino
 ##### Sensor montage
-![ecg-montage](exercises/img/montage_ecg.png)
+ <img src="exercises/img/montage_ecg.png" width="40%">
 
 #### Pitch
 *"Learn to control this circle biofeedback and create a coherent state in about a minute. Using your respiration to balance your heart, thoughts and emotions, you can achieve energy, inner harmony and feel better fast anywhere. "*
@@ -157,8 +159,9 @@ See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100
 
 #### Gestures (EMG) — Bitalino
 ##### Sensor montage
-![emg-montage](exercises/img/montage_emg.png)
 
+ <img src="exercises/img/montage_emg.png" width="40%">
+ 
 #### Pitch
 *" Play Rock, Paper, Scissor on your computer without touching a mouse or a keyboard. 
 Here is a new kind of man-machine interface, which has never brought us closer to the spirit of the film Minority Report..."*
@@ -179,7 +182,7 @@ Here is a new kind of man-machine interface, which has never brought us closer t
 - Timefluw documentation [here](https://doc.timeflux.io/latest/)
 
 ## Piffalls
-###Timeflux 
+### Timeflux 
 
 
 #### Check your graphs! 
@@ -203,7 +206,9 @@ command not found: timeflux
 
 - **High filter order and induced delay & phase distortions:**
  IIRFilter is a nonlinear phase filter (in passband), it distorts the frequency contents of passband region of signal. Get convinced yourself with [bonus part of exercise 2.](exercises/Exercise 2 - Playing with waves .md). 
- ![phase-disturb](exercises/img/hello_sinus_phaseshift_screenshot.png)
+ 
+ <img src="exercises/img/hello_sinus_phaseshift_screenshot.png" width="80%">
+
  
 - **Windowing** (the slower, the smoother): Real time is a lie, we do **pseudo-real-time**. Indeed,  Machine learning pipelines usually require the extraction of features that have the ability to represent each class in a representative way in order to be possible to distinguish them. For example, we can use windows of 1 second with or without overlap and represent each of these windows by a set of features, such as the mean, standard deviation, among others. We achieve this by using the [Window](https://doc.timeflux.io/latest/api/timeflux.nodes.window.html) node of timeflux. There are two ways of managing windowed extraction: 
 	- **either** you add a node `Window` in your graph and plug it between your signal and your feature extractor (see [welch example](https://github.com/timeflux/hackathon/blob/f15f5582d08d85be30e4365a8200c429984ff2dd/graphs/ecg_coherence/biomarkers.yaml#L156-L163)); 
@@ -213,16 +218,23 @@ command not found: timeflux
  
 
 ### Device installation 
-Always have a look at the monitor! 
+**Always have a look at the monitor!**
 
-- Ensure you that sensors are plugged the right way
+- Unplug your laptop ! ! 
+![unplug-effect](exercises/img/unplug_effect.gif)
+- Ensure you that sensors are plugged the right way 
+
+ <img src="exercises/img/bitalino_montage.png" width="30%">
 - Signal quality: always keep a SQI tracker
 - Sensors montage: ask google! 
 
 ### Commands 
 **Keep safeguards!(!!)**
 
-- [False positive](https://en.wikipedia.org/wiki/False_positives_and_false_negatives) **always happen** and can cause damage if you don't keep safeguards in your design. ![false-positive](exercises/img/false_positive.jpg)
+- [False positive](https://en.wikipedia.org/wiki/False_positives_and_false_negatives) **always happen** and can cause damage if you don't keep safeguards in your design. 
+
+ <img src="exercises/img/false_positive.jpg" width="80%">
+
 
 Imagine you associate a brain state to a command of a drone, it could scratch for example brain because you blinked and the model mistakes. A nice practice is to ask yourself: *how bad is it to classify wrong?*
 When you work with more than 2 class, you may look at [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) that represents pairwised false positives. 
