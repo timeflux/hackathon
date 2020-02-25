@@ -30,7 +30,7 @@ graphs:
         class: UI
         params:
           routes:
-            eeg: apps/eeg_feedback
+            eeg_feedback: apps/eeg_feedback # now open http://localhost:8000/eeg_feedback/
 
       # Clean signal
       # -------------
@@ -39,7 +39,6 @@ graphs:
         class: IIRFilter
         params:
           filter_type: bandstop
-          #          rate: 1000
           frequencies: [45, 55]
           order: 1
 
@@ -48,7 +47,6 @@ graphs:
         class: IIRFilter
         params:
           filter_type: bandpass
-          #          rate: 1000
           frequencies: [1, 30]
           order: 2
 

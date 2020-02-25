@@ -34,7 +34,7 @@ graphs:
         class: UI
         params:
           routes:
-            emg: apps/emg_gesture
+            emg_gesture: apps/emg_gesture # now open http://localhost:8000/emg_gesture/
           settings:
             roshambo:
               fixation_duration: 1000
