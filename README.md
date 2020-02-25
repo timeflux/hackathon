@@ -28,9 +28,9 @@ You have 48 hours, in a team of five, to developp an application/experiment/inst
 
 Choose your track amongst the followings:
 
-1. Noise tagging BCI (occiptal) — MindAffect + OpenBCI
-2. Neurofeedback (pre-frontal, bipolar) — Bitalino
-3. Cardiac coherence (ECG, PPG) — Bitalino
+1. Occipital (EEG) — MindAffect + OpenBCI
+2. Frontal (EEG) — Bitalino
+3. Cardiac (ECG) — Bitalino
 4. Gestures (EMG) — Bitalino
 
 ## Organization 
@@ -65,17 +65,17 @@ git clone https://github.com/timeflux/hackathon
 
 - If you still need to install a timeflux conda environment: 
 
-```
-> cd hackathon
-> conda env create -f environment.yaml
-> conda activate timeflux
+```bash
+cd hackathon
+conda env create -f environment.yaml
+conda activate timeflux
 ```
 - If you already have a timeflux environment, install some additionnal packages: 
 
-```
-> cd hackathon
-> conda activate timeflux
-timeflux > pip install -r requirements.txt 
+```bash
+cd hackathon
+conda activate timeflux
+pip install -r requirements.txt 
 ```
 
 ## Repository structure
@@ -127,7 +127,7 @@ then be integrated to timeflux pluggins.
 
 
 ### Tracks
-#### Noise tagging BCI (occiptal) — MindAffect + OpenBCI
+#### Occipital EEG (Noise tagging) — MindAffect + OpenBCI
 #### Pitch
 *"With this solution, one wears a headset that measures electrical brain activity. Through visually directing one’s attention at specifically designed stimulus, the BCI matches the brain signals with the stimulus."*
 
@@ -136,11 +136,10 @@ then be integrated to timeflux pluggins.
 
 See other demo in [this video](https://www.kickstarter.com/projects/bci/make-100-create-your-own-brain-computer-interface). 
 
-#### Neurofeedback (pre-frontal, bipolar) — Bitalino
+#### Fontal EEG — Bitalino
 ##### Sensor montage
 
 You need to plug the EEG sensor at input A1 of Bitalino and place the IN+ and IN- electrodes (black and red) on your forehead and the mass on the bone behind your ear, as follow:
-
 
 ![eeg-frontal-montage](exercises/img/eeg_frontal_montage.png)
 
@@ -148,10 +147,17 @@ You need to plug the EEG sensor at input A1 of Bitalino and place the IN+ and IN
 *"Make your drone fly and land just by looking up and down, communicate through blink-morse or focus and listen to your inner music played by your brain waves. There are so many things we can achieve with a simple sensor on the forehead!"*
 
 #### Demo 
+
+```bash
+	conda activate timeflux
+	timeflux -d graphs/eeg_frontal.yaml
+```
+Then, open <http://localhost:8000/eeg_frontal/>. 
+
 ![demo-frontal-eeg](exercises/img/demo_eeg.gif)
 
 
-#### Cardiac coherence (ECG, PPG) — Bitalino
+#### Cardiac (ECG) — Bitalino
 ##### Sensor montage
 You need to plug the ECG at inpuut A1 of Bitalino and place the electrode as follow: 
 
@@ -162,6 +168,14 @@ You need to plug the ECG at inpuut A1 of Bitalino and place the electrode as fol
 #### Pitch
 *"Learn to control this circle biofeedback and create a coherent state in about a minute. Using your respiration to balance your heart, thoughts and emotions, you can achieve energy, inner harmony and feel better fast anywhere. "*
 #### Demo 
+
+```bash
+	conda activate timeflux
+	timeflux -d graphs/ecg_cardiac.yaml
+```
+
+Then, open <http://localhost:8000/ecg_cardiac/>. 
+
 ![demo-coherence-ecg](exercises/img/demo_coherence.gif)
 
 
@@ -175,8 +189,16 @@ You need to plug the EMG sensors at input A1 and A2 of Bitalino and place the el
 #### Pitch
 *" Play Rock, Paper, Scissor on your computer without touching a mouse or a keyboard. 
 Here is a new kind of man-machine interface, which has never brought us closer to the spirit of the film Minority Report..."*
+
+```bash
+	conda activate timeflux
+	timeflux -d graphs/emg_gesture.yaml
+```
+
+Then, open <http://localhost:8000/emg_gesture/>. 
+
 #### Demo 
-![demo-frontal-eeg](exercises/img/demo_gesture.gif)
+![demo-emg-gesture](exercises/img/demo_gesture.gif)
 
 
 # Getting help 
@@ -191,7 +213,7 @@ Here is a new kind of man-machine interface, which has never brought us closer t
 - In [Neurotechedu](http://learn.neurotechedu.com/lessons/), you will find our educational content grouped by related clusters
 - Timefluw documentation [here](https://doc.timeflux.io/latest/)
 
-## Piffalls
+## Pitffalls
 ### Timeflux 
 
 
