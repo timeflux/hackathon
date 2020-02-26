@@ -21,4 +21,4 @@ class Divide(Node):
                                        columns=self.i_num.data.columns, index=self.i_num.data.index)
             # propagate the meta
             self.o.meta = self.i_num.meta
-            self.o.meta.update(self.i_den)
+            self.o.meta.update(self.i_den.meta)
