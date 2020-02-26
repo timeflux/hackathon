@@ -67,7 +67,7 @@ git clone https://github.com/timeflux/hackathon
 
 ```bash
 cd hackathon
-conda env create -f environment.yaml
+conda env create -f environment.yml
 conda activate timeflux
 ```
 - If you already have a timeflux environment, install some additionnal packages: 
