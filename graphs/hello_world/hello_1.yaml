@@ -1,6 +1,6 @@
 graphs:
-
-  - nodes:
+  - id: MyFirstGraph
+    nodes:
     - id: random
       module: timeflux.nodes.random
       class: Random
@@ -16,16 +16,12 @@ graphs:
       class: Add
       params:
         value: 1
-    - id: display_random
-      module: timeflux.nodes.debug
-      class: Display
-    - id: display_add
+    - id: display
       module: timeflux.nodes.debug
       class: Display
     edges:
     - source: random
       target: add
-    - source: random
-      target: display_random
     - source: add
-      target: display_add
+      target: display
+    rate: 1
