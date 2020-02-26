@@ -34,22 +34,18 @@ Choose your track amongst the followings:
 4. Gestures (EMG) — Bitalino
 
 ## Organization 
-### Teams inscriptions
-- Team of 5
-- Choose a track
-- Name the person responsible
-- Fullfill the table -> 
-- todo ??? 
+### Hack your mind and body
+
+- **Team up**
+- Select the **input** (brain, heart, muscle)
+- We provide **plug-and-play** processing **pipelines** (but you can make your own if you feel adventurous)
+- **Connect** everything (0MQ, Websockets, OSC, LSL)
+- Build the **output** (Python, JavaScript, Unity, Arduino, other)
+- Have **fun**!
 
 ### Submissions & Prize Jury
-todo ! 
 
-How to sign up for the prizes:
-
-- one or more photos/screenshots/videos of your project;
-- one paragraph describing your solution;
-- submission deadline is Sunday the 15th at 6pm (??)
-- todo ??? 
+Coming soon :) 
 
 ------
 
@@ -96,9 +92,9 @@ Here, you'll find the material for the Masterclass exercises:
 	2. Practice basic filtering with dsp pluggin
 	3. Display your signal in the UI
 	4. Save your data into a file and understand ZMQ purpose for multiple graph
-	5. (bonus) Play around with the parameters to avoid pitfalls. 
+	5. Design a feedback with timeflux.js
+	6. (bonus) Play around with the parameters to avoid pitfalls. 
 
-	todo: add circle in bonus
 
 ### Graphs
 - the main graph are named by tracks and imports some graph located in `graphs/subgraph` directory
