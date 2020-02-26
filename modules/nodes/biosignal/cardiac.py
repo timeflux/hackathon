@@ -15,4 +15,4 @@ class CardiacFreqMarkers(Node):
 
         self.o.data = pd.concat([self.i_lf.data, self.i_hf.data], axis=1)
         self.o.data.columns = ['lf', 'hf']
-        self.o.data.loc[:, 'lf/hf'] = self.o.data['lf'] / self.o.data['hf']
+        self.o.data.loc[:, 'lf/hf'] = (self.o.data['lf'] / self.o.data['hf']) / 6
