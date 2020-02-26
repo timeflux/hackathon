@@ -30,7 +30,7 @@ graphs:
         class: UI
         params:
           routes:
-            eeg_feedback: apps/eeg_feedback # now open http://localhost:8000/eeg_feedback/
+            eeg_frontal: apps/eeg_frontal # now open http://localhost:8000/eeg_frontal
 
       # Clean signal
       # -------------
@@ -64,8 +64,8 @@ graphs:
         params:
           default: 0.
           range:
-            -1.: [[null, -50.]] # closing
-            1.: [[50., null]] # opening
+            -1.: [[null, -100.]] # closing
+            1.: [[100., null]] # opening
 
       #  extract band powers
       # --------------------
@@ -83,14 +83,14 @@ graphs:
           design: butter
 
       - id: band_powers
-        module: modules.nodes.power
+        module: modules.nodes.dsp.power
         class: Power
         params:
           length: 3
           step: 1
 
       - id: total_power
-        module: modules.nodes.power
+        module: modules.nodes.dsp.power
         class: Power
         params:
           length: 3
@@ -112,6 +112,12 @@ graphs:
         class: Pub
         params:
           topic: eeg_powers
+      - id: pub_blink
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: eeg_blinks
+
 
       # for debug purpose
       # ------------------
@@ -121,8 +127,8 @@ graphs:
 
     edges:
       - source: sub:bitalino
-        target: convert
-      - source: convert
+#        target: convert
+#      - source: convert
         target: select
       - source: select
         target: ui:eeg_raw
@@ -133,6 +139,8 @@ graphs:
       - source: bandpass
         target: ui:eeg_filtered
 
+      # Blinks
+      # ------
       - source: bandpass
         target: decimate
       - source: decimate
@@ -140,6 +148,8 @@ graphs:
       - source: blink
         target: ui:blink
 
+      # Spectral feature
+      # -----------------
       - source: bandpass
         target: filter_bank
       - source: filter_bank
@@ -153,16 +163,22 @@ graphs:
       - source: total_power
         target: divide:den
 
+      # UI
+      # ----
       - source: band_powers
         target: ui:eeg_absolute_powers
       - source: divide
         target: ui:eeg_relative_powers
 
+      # Publish to save
+      # ---------------
       - source: notch
         target: pub_filtered
-      - source: band_powers
+      - source: divide
         target: pub_powers
+      - source: blink
+        target: pub_blink
 
-    #      - source: bandpass
-    #        target: display
+      - source: decimate
+        target: display
     rate: 10

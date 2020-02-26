@@ -38,8 +38,12 @@ graphs:
           settings:
             roshambo:
               fixation_duration: 1000
-              trial_duration: 5000
+              trial_duration: 4000
               calibration_rounds: 4
+
+      - id: deserialize_events
+        module: modules.nodes.events
+        class: DeserializeColumn
 
       # Clean signal
       # -------------
@@ -52,7 +56,7 @@ graphs:
           order: 2
 
       - id: mask_saturation
-        module: modules.nodes.filters
+        module: modules.nodes.dsp.filters
         class:  DropOutsider
         params:
           left: -1.5
@@ -61,18 +65,18 @@ graphs:
       # Detect burst using TKEO
       # -----------------------
       - id: tkeo
-        module: timeflux_biosignal.nodes.emg
+        module: modules.nodes.biosignal.emg
         class:  TKEO
 
       - id: smooth
-        module: modules.nodes.filters
+        module: modules.nodes.dsp.filters
         class:  MovingAverage
         params:
           length: .5  #.1
           step: 0.
 
       - id: scale
-        module: modules.nodes.filters
+        module: modules.nodes.dsp.filters
         class: RecursiveScaler
         params:
           method: minmax
@@ -81,7 +85,7 @@ graphs:
       # KNN on temporal features
       # -------------------------
       - id: temporal_features
-        module: timeflux_biosignal.nodes.emg
+        module: modules.nodes.biosignal.emg
         class: TemporalFeatures
 
       - id: epoch
@@ -89,7 +93,7 @@ graphs:
         class: Epoch
         params:
           before: 0.0
-          after: 4.0
+          after: 3.0
           event_trigger: trial_starts
 
       - id: fit_predict
@@ -130,6 +134,12 @@ graphs:
         class: Pub
         params:
           topic: emg_burst
+
+      - id: pub_features
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: emg_features
       - id: pub_predictions
         module: timeflux.nodes.zmq
         class: Pub
@@ -174,7 +184,7 @@ graphs:
       # -------------------------
       - source: convert
         target: epoch
-      - source: ui:events
+      - source: deserialize_events    #ui:events
         target: epoch:events
       - source: epoch:*
         target: temporal_features
@@ -191,6 +201,8 @@ graphs:
       # ----
       - source: sub:events
         target: ui:events
+      - source: ui:events  #
+        target: deserialize_events #
       - source: select
         target: ui:emg_raw
       - source: scale
@@ -202,9 +214,16 @@ graphs:
         target: pub_events
       - source: scale
         target: pub_burst
-      - source: sub:events
+      - source: temporal_features
+        target: pub_features
+      - source: bandpass
+        target: pub_filtered
+
+      # for debug purpose 
+      # -----------------
+      - source: temporal_features:0
         target: display2
-      - source: scale
+      - source: ui:events
         target: display
 
     rate: 0

@@ -21,6 +21,9 @@ graphs:
       - source: sub:emg_burst
         target: save:emg_burst  # will be stored in hdf( key '/emg/burst'
 
+      - source: sub:emg_features
+        target: save:emg_features  # will be stored in hdf( key '/emg/features'
+
       - source: sub:events
         target: save:events # will be stored in hdf( key '/events'
     rate: 1 # save stuff once per second

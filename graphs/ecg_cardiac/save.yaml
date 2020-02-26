@@ -5,7 +5,7 @@ graphs:
         module: timeflux.nodes.zmq
         class: Sub
         params:
-          topics: [bitalino, eeg, events]
+          topics: [bitalino, cardiac, events]
       - id: save
         module: timeflux.nodes.hdf5
         class: Save
@@ -15,11 +15,11 @@ graphs:
       - source: sub:bitalino
         target: save:bitalino # will be saved in hdf( key '/bitalino'
 
-      - source: sub:eeg_filtered
-        target: save:eeg_filtered # will be saved in hdf( key '/eeg/filtered'
+      - source: sub:cardiac_features
+        target: save:cardiac_features  # will be saved in hdf( key '/ecg_cardiac/features'
 
-      - source: sub:eeg_powers
-        target: save:eeg_powers  # will be saved in hdf( key '/eeg/raw'
+      - source: sub:cardiac_rr
+        target: save:cardiac_rr  # will be saved in hdf( key '/ecg_cardiac/rr'
 
       - source: sub:events
         target: save:events # will be saved in hdf( key '/events'
