@@ -53,6 +53,8 @@ graphs:
 #      # part 2
       - source: add_sinus
         target: lowpass
+      - source: lowpass
+        target: display
 
       # part 3
       # TODO: plug the signals to the UI

@@ -44,8 +44,8 @@ graphs:
         target: add_sinus:m1
       - source: noise_sinus
         target: add_sinus:m2
-#      - source: add_sinus
-#        target: display
+      - source: add_sinus
+        target: display
 
       # part 2
       # TODO: plug the summed signal to the filter
