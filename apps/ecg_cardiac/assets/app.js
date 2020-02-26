@@ -13,10 +13,14 @@ const _gradientColors =
     [[.0, .15, "#ff3030"],
         [.15, .30, "#ff5d4b"],
         [.30, .45, "#ff8a4b"],
-        [.45, .60, "#ffc04b"],
-        [.60, .75, "#ffe74b"],
-        [.75, .90, "#9aff26"],
-        [.90, 1.1, "#02ff8a"],
+        [.45, .60, "#ffc04b"],  // No good
+        [.60, .75, "#ffe74b"],  // Getting closer
+        [.75, .90, "#9aff26"],  // Almost there
+        [.90, 1.1, "#02ff8a"],  // Coherence master
+        [1.1, 1.3, "#20ffff"],  // Above Coherence master
+        [1.3, 1.5, "#14b5ff"],  // this is color for Ghandi meditating
+        [1.5, 1.7, "#1173ff"],  // this should never happen, but who knows..
+
     ];
 let container = document.getElementById('circle-container');
 var max = 0;
@@ -44,25 +48,36 @@ load_settings().then(settings => {
 // On connect, subscribe to usefull streams
 io.on('connect', () => {
     console.log('connected');
-    io.subscribe('rr_interval');
+    io.subscribe('rr');
+    io.subscribe('scaled_rr');
     io.subscribe('cardiac_features');
+});
+
+// Scaled RR interval defines the circle radius
+io.on('scaled_rr', (data) => {
+    if (Object.keys(data).length > 0) {
+        let row = data[Object.keys(data)[Object.keys(data).length - 1]]; // Last row
+        let column = Object.keys(row)[0]; // First column
+        let value = row[column]; // Value
+        value = Math.tanh(value); // Ensure value between 0 and 1
+        value = 1 - Math.tanh(value); // circle radius should decrease when interval increase (ie. when BPM decrease)
+        let px = (value * (max - min) + min) + 'px'; // Transform to pixels
+        set_css_var('--circle-width', px); // Set the width
+        set_css_var('--circle-height', px); // Set the height
+    }
 
 });
 
-// RR interval defines the circle radius
-io.on('rr_interval', (data) => {
-    let row = data[Object.keys(data)[Object.keys(data).length - 1]]; // Last row
-    let column = Object.keys(row)[0]; // First column
-    let value = row[column]; // Value
-    value = Math.tanh(value); // Ensure value between 0 and 1
-    value = 1 - value; // circle radius should decrease when interval increase (ie. when BPM decrease)
-    let px = (value * (max - min) + min) + 'px'; // Transform to pixels
-    set_css_var('--circle-width', px); // Set the width
-    set_css_var('--circle-height', px); // Set the height
-
-    // Display BPM value in table
-    let bpm = 60 / value;
-    td_bpm.innerHTML = bpm.toFixed(0) + ' bpm';
+// Display BPM in table 
+io.on('rr', (data) => {
+    if (Object.keys(data).length > 0) {
+        let row = data[Object.keys(data)[Object.keys(data).length - 1]]; // Last row
+        let column = Object.keys(row)[0]; // First column
+        let value = row[column]; // Value
+        // Display BPM value in table
+        let bpm = 60 / value;
+        td_bpm.innerHTML = bpm.toFixed(0) + ' bpm';
+    }
 });
 
 // lf/hf (coherence) level  defines the circle color gradient
