@@ -25,6 +25,29 @@ class SerializeColumn(Node):
         self.o = self.i
         self.o.data[self._column] = self.o.data[self._column].apply(lambda d: json.dumps(d))
 
+class DeserializeColumn(Node):
+    """ Deserialize one column
+    Attributes:
+        i (Port): Default input, expects DataFrame.
+        o (Port): Default output, provides DataFrame and meta.
+    Args:
+        column (str): Column with data to serialize
+        meta_keys, labels=None, drop_label
+    """
+
+    def __init__(self, column='data'):
+        super().__init__()
+        self._column = column
+
+    def update(self):
+        if not self.i.ready():
+            return
+        # copy the data and the meta
+        self.o = self.i
+        self.o.data[self._column] = self.o.data[self._column].apply(self._loads)
+    def _loads(self, d):
+        return json.loads(d) if d is not None else {}
+
 
 class ToSignal(Node):
     """ Serialize one column
