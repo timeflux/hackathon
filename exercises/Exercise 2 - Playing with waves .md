@@ -12,7 +12,8 @@ In this exercise, you will :
 3. lowpass the summed signal (this is [Part 2](#part_2))
 4.  display the signal using the UI monitoring (this is [Part 3](#part_3))
 5. save the data in a HDF5 file (this is [Part 4](#part_4))
-6. *(bonus) play around with parameters*
+6. design a feedback with timeflux.js (this is [Part 5](#part_5))
+7. *(bonus) play around with parameters*
 
 ## Getting started
 
@@ -20,55 +21,56 @@ In this exercise, you will be editing a YAML graph and run it using timeflux com
 
 First, let's have a look at the graph. 
 
-<div class="highlight"><pre><span></span><span class="nt">graphs</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hello_sinus</span>
-    <span class="nt">nodes</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">carrier_sinus</span>
-        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux_example.nodes.sinus</span>
-        <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sinus</span>
-        <span class="nt">params</span><span class="p">:</span>
-          <span class="nt">rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.5</span>
-          <span class="nt">amplitude</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+```yaml
+graphs:
+  - id: hello_sinus
+    nodes:
+      - id: carrier_sinus
+        module: timeflux_example.nodes.sinus
+        class: Sinus
+        params:
+          rate: .5
+          amplitude: 1
 
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise_sinus</span>
-        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux_example.nodes.sinus</span>
-        <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sinus</span>
-        <span class="nt">params</span><span class="p">:</span>
-          <span class="nt">rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-          <span class="nt">amplitude</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">.1</span>
+      - id: noise_sinus
+        module: timeflux_example.nodes.sinus
+        class: Sinus
+        params:
+          rate: 5
+          amplitude: .1
 
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">display</span>
-        <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux.nodes.debug</span>
-        <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Display</span>
+      - id: display
+        module: timeflux.nodes.debug
+        class: Display
 
-      <span class="c1"># part 1</span>
-      <span class="c1"># TODO: add a node that adds the two sinus</span>
-      <span class="c1"># Hint:  https://doc.timeflux.io/latest/api/timeflux_example.nodes.arithmetic.html</span>
+      # part 1
+      # TODO: add a node that adds the two sinus
+      # Hint:  https://doc.timeflux.io/latest/api/timeflux_example.nodes.arithmetic.html
 
-      <span class="c1"># part 2</span>
-      <span class="c1"># TODO: add a lowpass filter to filter the summed signal</span>
-      <span class="c1"># Hint: https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html</span>
+      # part 2
+      # TODO: add a lowpass filter to filter the summed signal
+      # Hint: https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html
 
-      <span class="c1"># part 3</span>
-      <span class="c1"># TODO: add an UI to monitor the signal before and after filtering</span>
+      # part 3
+      # TODO: add an UI to monitor the signal before and after filtering
 
-    <span class="nt">edges</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">carrier_sinus</span>
-        <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">display</span>
-      <span class="c1">#      - source:</span>
-      <span class="c1">#        target:</span>
-      <span class="c1">#       part 1: TODO: plug the noise and carrier sinus to the input ports of your summation node</span>
+    edges:
+      - source: carrier_sinus
+        target: display
+      #      - source:
+      #        target:
+      #       part 1: TODO: plug the noise and carrier sinus to the input ports of your summation node
 
 
-      <span class="c1">#      # part 2</span>
-      <span class="c1"># TODO: plug the summed signal to the filter</span>
+      #      # part 2
+      # TODO: plug the summed signal to the filter
 
-      <span class="c1"># part 3</span>
-      <span class="c1"># TODO: plug the signals to the UI</span>
+      # part 3
+      # TODO: plug the signals to the UI
 
-    <span class="nt">rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">32</span>
-</pre></div>
+    rate: 32
 
+```
 
 
 ### Command line 
@@ -160,9 +162,20 @@ One solution is given [here](../graphs/hello_worlds/hello_sinus_solution_part4.y
 
 <img src="img/hello_sinus_solution_part4.png" alt='hello_world'>
 
+## <a href='#part_5'>Part 5</a> : Design a feedback with timeflux.js  
 
+The idea here is to use [timeflux Javascript API](https://github.com/timeflux/timeflux_ui/blob/master/timeflux_ui/www/common/assets/js/timeflux.js)
+ to design a feedback on the sinus amplitude in your browser. 
+ For example, 
+ 
+**Hint:** Check [these available example apps](https://github.com/timeflux/timeflux_ui/tree/master/apps).
+ 
+ Something like: 
+ 
+ <img src="img/hello_sinus_ui.gif" width="60%">
+
+ 
 ## <a href='#bonus'>Bonus</a> : Play around with the parameters
-
 
 Now, time to play around with the parameters. 
 
@@ -180,5 +193,4 @@ when working offline, one prefer to use a forward-backward filter ( [filtfilt](h
 
 
 2.  If you increase (too much) the rate of your graph, you'll notice some 'congestion' warnings in the console, it means that your nodes are still working when the scheduler updates. 
-    In you drecrease (too much) the rate of your graph, you'll notice that the time gets late, and that signals kind of stutter. 
-
+    In you decrease (too much) the rate of your graph, you'll notice that the time gets late, and that signals kind of stutter. 

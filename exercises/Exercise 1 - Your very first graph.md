@@ -6,39 +6,39 @@ For your first iteration, here is what you will build:
 
 ## Load the YAML graph 
 
-<div class="highlight"><pre><span></span><span class="nt">graphs</span><span class="p">:</span>
-
-  <span class="p p-Indicator">-</span> <span class="nt">nodes</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">random</span>
-      <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux.nodes.random</span>
-      <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Random</span>
-      <span class="nt">params</span><span class="p">:</span>
-        <span class="nt">columns</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-        <span class="nt">rows_min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-        <span class="nt">rows_max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
-        <span class="nt">value_min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-        <span class="nt">value_max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
-        <span class="nt">seed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add</span>
-      <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux_example.nodes.arithmetic</span>
-      <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Add</span>
-      <span class="nt">params</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">display_random</span>
-      <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux.nodes.debug</span>
-      <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Display</span>
-    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">display_add</span>
-      <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timeflux.nodes.debug</span>
-      <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Display</span>
-    <span class="nt">edges</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">random</span>
-      <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add</span>
-    <span class="p p-Indicator">-</span> <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">random</span>
-      <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">display_random</span>
-    <span class="p p-Indicator">-</span> <span class="nt">source</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">add</span>
-      <span class="nt">target</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">display_add</span>
-</pre></div>
-
+```yaml
+graphs:
+  - id: hello_world
+    nodes:
+    - id: random
+      module: timeflux.nodes.random
+      class: Random
+      params:
+        columns: 5
+        rows_min: 1
+        rows_max: 10
+        value_min: 0
+        value_max: 5
+        seed: 1
+    - id: add
+      module: timeflux_example.nodes.arithmetic
+      class: Add
+      params:
+        value: 1
+    - id: display_random
+      module: timeflux.nodes.debug
+      class: Display
+    - id: display_add
+      module: timeflux.nodes.debug
+      class: Display
+    edges:
+    - source: random
+      target: add
+    - source: random
+      target: display_random
+    - source: add
+      target: display_add
+```
 
 
 # Run from command line 
@@ -119,7 +119,6 @@ Registry.rate = 1
 branch = Branch(graph=graph)
 branch.update()
 
-
 ```
 
     DEBUG:timeflux.timeflux.nodes.debug.Display:
@@ -138,64 +137,13 @@ branch.update()
 
 
 ```python
-branch.get_port('add', port_id='o').data
+    branch.get_port('add', port_id='o').data
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1969-12-31 23:59:59.000000</th>
-      <td>6</td>
-      <td>4</td>
-      <td>5</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1969-12-31 23:59:59.333334</th>
-      <td>4</td>
-      <td>6</td>
-      <td>1</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>1969-12-31 23:59:59.666667</th>
-      <td>5</td>
-      <td>6</td>
-      <td>5</td>
-      <td>2</td>
-      <td>3</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
+```
+                                0	1	2	3	4
+    1969-12-31 23:59:59.000000	6	4	5	1	2
+    1969-12-31 23:59:59.333334	4	6	1	1	2
+    1969-12-31 23:59:59.666667	5	6	5	2	3
+```
 
