@@ -34,6 +34,8 @@ graphs:
       - id: ui
         module: timeflux_ui.nodes.ui
         class: UI
+      # part 5
+      # TODO: Add a route in the UI to your own app
 
       # for debug purpose
       # -----------------

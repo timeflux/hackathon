@@ -7,6 +7,7 @@ graphs:
         params:
           rate: .5
           amplitude: 1
+#          name: carrier
 
       - id: noise_sinus
         module: timeflux_example.nodes.sinus
@@ -14,6 +15,7 @@ graphs:
         params:
           rate: 5
           amplitude: .1
+#          name: noise
 
       # part 1
       - id: add_sinus
@@ -22,16 +24,14 @@ graphs:
 
 
       # part 2
-      - id: lowpass
-        module: timeflux_dsp.nodes.filters
-        class: IIRFilter
-        params:
-          frequencies: [2]
-          order: 3
-          filter_type: lowpass
+      # TODO: add a lowpass filter to filter the summed signal
+      # Hint: https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html
 
       # part 3
       # TODO: add an UI to monitor the signal before and after filtering
+
+      # part 5
+      # TODO: Add a route in the UI to your own app
 
       # for debug purpose
       # -----------------
@@ -47,12 +47,13 @@ graphs:
 #      - source: add_sinus
 #        target: display
 
-#      # part 2
-      - source: add_sinus
-        target: lowpass
-
+      # part 2
+      # TODO: plug the summed signal to the filter
 
       # part 3
       # TODO: plug the signals to the UI
 
     rate: 32
+
+  # part 4
+  # TODO: Create a second graph to save the data into a file

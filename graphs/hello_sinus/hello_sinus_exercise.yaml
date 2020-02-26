@@ -29,6 +29,8 @@ graphs:
 
       # part 3
       # TODO: add an UI to monitor the signal before and after filtering
+      # part 5
+      # TODO: Add a route in the UI to your own app
 
     edges:
       - source: carrier_sinus
@@ -38,10 +40,14 @@ graphs:
       #       part 1: TODO: plug the noise and carrier sinus to the input ports of your summation node
 
 
-      #      # part 2
+      # part 2
       # TODO: plug the summed signal to the filter
 
       # part 3
       # TODO: plug the signals to the UI
 
     rate: 32
+
+  # part 4
+  # TODO: Create a second graph to save the data into a file
+

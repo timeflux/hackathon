@@ -40,6 +40,9 @@ graphs:
       - id: ui
         module: timeflux_ui.nodes.ui
         class: UI
+        params:
+          routes:  # part 5
+            hello_sinus: apps/hello_sinus # now open http://localhost:8000/hello_sinus
 
       # part 4
       - id: pub_sum
@@ -96,8 +99,6 @@ graphs:
 
       - source: ui:events
         target: display # will display uI events in the terminal
-
-
     rate: 32
 
   - id: save
