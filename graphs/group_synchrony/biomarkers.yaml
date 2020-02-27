@@ -1,0 +1,155 @@
+graphs:
+
+  - id: cardiac_synchrony
+    nodes:
+      # Subscribe to signals
+      # --------------------
+      - id: sub  # /!\ make sure you have a Broker amongst your exercises!  /!\
+        module: timeflux.nodes.zmq
+        class: Sub
+        params:
+          topics: [bitalino]
+      # Select channel with eeg sensor
+      # ------------------------------
+      - id: select
+        module: timeflux.nodes.query
+        class: LocQuery
+        params:
+          key: [A1, A2, A3, A4]
+
+      # Define apps for feedback
+      # -----------------------
+      - id: ui
+        module: timeflux_ui.nodes.ui
+        class: UI
+        params:
+          routes:
+            group_synchony: apps/group_synchony
+
+      # Clean signal
+      # -------------
+      - id: notch
+        module: timeflux_dsp.nodes.filters
+        class: IIRFilter
+        params:
+          filter_type: bandstop
+          frequencies: [45, 55]
+          order: 1
+
+      - id: bandpass
+        module: timeflux_dsp.nodes.filters
+        class: IIRFilter
+        params:
+          filter_type: bandpass
+          frequencies: [2, 40]
+          order: 2
+
+      # Extract ecg_cardiac beats
+      # ---------------------
+      - id: scale_signal
+        module: timeflux_dsp.nodes.filters
+        class:  AdaptiveScaler
+        params:
+          length: 5
+          method: sklearn.preprocessing.MinMaxScaler
+
+      - id: rr_interval
+        module: timeflux_hackathon.nodes.ecg_cardiac
+        class: MultiNNInterval
+        params:
+          peaks_method: LocalDetect  # for ppg, use RollingDetect instead
+          peaks_params:
+          delta: .5
+          tol: .5
+
+      - id: dejitter
+        module: timeflux.nodes.dejitter
+        class: Interpolate
+        params:
+          rate: 1
+          method: linear
+
+      # Estimate ryhthm synchrony
+      # -------------------------
+      - id: scaler
+        module: timeflux_dsp.nodes.filters
+        class:  AdaptiveScaler
+        params:
+          length: 10 # todo rather 30
+          method: sklearn.preprocessing.MinMaxScaler
+
+      - id: window
+        module: timeflux_hackathon.nodes.window
+        class: FixedWindow
+        params:
+          length: 32
+          step: 1
+
+      - id: synchrony
+        module: timeflux_hackathon.nodes.synchrony
+        class: Synchrony
+        params:
+          length: 15
+          step: 1
+          method: corr
+          normalize: True
+
+      # Eventually, publish some streams to save them
+      # ---------------------------------------------
+      - id: pub_rr
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: cardiac_rr
+
+      - id: pub_synchrony
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: synchrony
+
+      # for debug purpose
+      # ------------------
+
+      - id: display
+        module: timeflux.nodes.debug
+        class: Display
+
+    edges:
+      # From raw  data to features
+      # --------------------------
+      - source: sub:bitalino
+        target: select
+      - source: select
+        target: notch
+      - source: notch
+        target: bandpass
+      - source: bandpass
+        target: rr_interval
+      - source: rr_interval
+        target: scaler
+      - source: scaler
+        target: dejitter
+      - source: dejitter
+        target: synchrony
+
+      # Publish in UI
+      # -------------
+      - source: random_individuals
+        target: ui:vertices
+      - source: random_synchrony
+        target: ui:color
+
+      # for debug purpose
+      # ------------------
+      - source: synchrony
+        target: pub_synchrony
+      - source: rr_interval
+        target: pub_rr
+
+      # Publish in Broker to eventually save
+      # ------------------------------------
+      - source: synchrony
+        target: display
+
+    rate: 0
