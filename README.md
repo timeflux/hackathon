@@ -64,14 +64,7 @@ git clone https://github.com/timeflux/hackathon
 ```bash
 cd hackathon
 conda env create -f environment.yml
-conda activate timeflux
-```
-- If you already have a timeflux environment, install some additionnal packages: 
-
-```bash
-cd hackathon
-conda activate timeflux
-pip install -r requirements.txt 
+conda activate timeflux-hackathon
 ```
 
 ## Repository structure
@@ -145,7 +138,7 @@ You need to plug the EEG sensor at input A1 of Bitalino and place the IN+ and IN
 #### Demo 
 
 ```bash
-	conda activate timeflux
+	conda activate timeflux-hackathon
 	timeflux -d graphs/eeg_frontal.yaml
 ```
 Then, open <http://localhost:8000/eeg_frontal/>. 
@@ -166,7 +159,7 @@ You need to plug the ECG at inpuut A1 of Bitalino and place the electrode as fol
 #### Demo 
 
 ```bash
-	conda activate timeflux
+	conda activate timeflux-hackathon
 	timeflux -d graphs/ecg_cardiac.yaml
 ```
 
@@ -187,7 +180,7 @@ You need to plug the EMG sensors at input A1 and A2 of Bitalino and place the el
 Here is a new kind of man-machine interface, which has never brought us closer to the spirit of the film Minority Report..."*
 
 ```bash
-	conda activate timeflux
+	conda activate timeflux-hackathon
 	timeflux -d graphs/emg_gesture.yaml
 ```
 
