@@ -1,14 +1,15 @@
 # Exercise 1 - Your very first graph  
 
-For your first iteration, here is what you will build:
-<img src="img/hello_world.png" alt='hello_world'>
 
+## Hello 1
+For your first iteration, here is what you will build:  
 
-## Load the YAML graph 
+<img src="img/helloworld_1.png" alt='hello_world'>
+
 
 ```yaml
 graphs:
-  - id: hello_world
+  - id: MyFirstGraph
     nodes:
     - id: random
       module: timeflux.nodes.random
@@ -25,32 +26,82 @@ graphs:
       class: Add
       params:
         value: 1
-    - id: display_random
+    - id: display
       module: timeflux.nodes.debug
       class: Display
-    - id: display_add
+    edges:
+    - source: random
+      target: add
+    - source: add
+      target: display
+    rate: 1
+```
+
+### Run from command line 
+In a terminal, activate your timeflux environment
+
+```
+conda activate timeflux-hackathon
+```
+
+and launch the app in debug (`-d` mode) : 
+
+```
+ timeflux -d graphs/hello_world/hello_1.yaml 
+```
+This will display in your terminal Dataframe with random values at which you added 1. The index of the DataFrame is the time, that is why we call it a 'time-series'.
+
+## Hello 2 
+For your second iteration, here is what you will build:  
+
+<img src="img/helloworld_2.png" alt='hello_world'>
+
+
+```yaml
+graphs:
+  - id: OneMoreNode
+    nodes:
+    - id: random
+      module: timeflux.nodes.random
+      class: Random
+    - id: add
+      module: timeflux_example.nodes.arithmetic
+      class: Add
+      params:
+        value: 1
+    - id: display_before
+      module: timeflux.nodes.debug
+      class: Display
+    - id: display_after
       module: timeflux.nodes.debug
       class: Display
     edges:
     - source: random
       target: add
     - source: random
-      target: display_random
+      target: display_before
     - source: add
-      target: display_add
+      target: display_after
 ```
 
 
-# Run from command line 
+### Run from command line 
 In a terminal, activate your timeflux environment
-```
-conda activate timeflux
-```
-and launch the app in deebug (`-d` mode) : 
 
 ```
-> timeflux -d graphs/hello_world.yaml 
+conda activate timeflux-hackathon
 ```
+
+and launch the app in debug (`-d` mode) : 
+
+```
+ timeflux -d graphs/hello_world/hello_2.yaml 
+```
+
+This will display in your terminal Dataframe with random values before and after having add 1. See on the graph, you plugged a 'display' node after node random and node add. In your terminal, you'll see two dataframe at each time the scheduler parses the graph, one is the output of random, the other the output of add. Both have the same index (ie. timestamps, time). 
+
+
+See bellow the kind of display you get:
 
 ```
 
@@ -65,85 +116,80 @@ and launch the app in deebug (`-d` mode) :
                                  0  1  2  3  4
     2020-02-24 16:36:14.396442  6  4  5  1  2
     2020-02-24 16:36:14.729775  4  6  1  1  2
-    2020-02-24 16:36:15.063108  5  6  5  2  3[0m
-    [34m2020-02-24 16:36:16,404[0m [90mDEBUG     [0m debug        47003    [32mProcess-1       [0m [37m
-                                 0  1  2  3  4
-    2020-02-24 16:36:15.397038  4  5  2  4  3
-    2020-02-24 16:36:15.497038  4  2  4  5  2
-    2020-02-24 16:36:15.597038  4  1  1  0  5
-    2020-02-24 16:36:15.697038  1  1  5  1  1
-    2020-02-24 16:36:15.797038  0  4  1  0  0
-    2020-02-24 16:36:15.897038  5  3  2  1  0
-    2020-02-24 16:36:15.997038  3  5  1  1  3
-    2020-02-24 16:36:16.097038  4  0  1  3  4
-    2020-02-24 16:36:16.197038  2  4  0  5  3
-    2020-02-24 16:36:16.297038  1  2  0  4  1[0m
-    [34m2020-02-24 16:36:16,412[0m [90mDEBUG     [0m debug        47003    [32mProcess-1       [0m [37m
-                                 0  1  2  3  4
-    2020-02-24 16:36:15.397038  5  6  3  5  4
-    2020-02-24 16:36:15.497038  5  3  5  6  3
-    2020-02-24 16:36:15.597038  5  2  2  1  6
-    2020-02-24 16:36:15.697038  2  2  6  2  2
-    2020-02-24 16:36:15.797038  1  5  2  1  1
-    2020-02-24 16:36:15.897038  6  4  3  2  1
-    2020-02-24 16:36:15.997038  4  6  2  2  4
-    2020-02-24 16:36:16.097038  5  1  2  4  5
-    2020-02-24 16:36:16.197038  3  5  1  6  4
-    2020-02-24 16:36:16.297038  2  3  1  5  2[0m
-    [34m2020-02-24 16:36:17,405[0m [90mDEBUG     [0m debug        47003    [32mProcess-1       [0m [37m
-                                 0  1  2  3  4
-    2020-02-24 16:36:16.397814  2  2  1  0  1
-    2020-02-24 16:36:16.897814  3  5  4  3  5[0m
-    [34m2020-02-24 16:36:17,412[0m [90mDEBUG     [0m debug        47003    [32mProcess-1       [0m [37m
-                                 0  1  2  3  4
-    2020-02-24 16:36:16.397814  3  3  2  1  2
-    2020-02-24 16:36:16.897814  4  6  5  4  6[0m
-    [34m2020-02-24 16:36:18,406[0m [90mDEBUG     [0m debug        47003    [32mProcess-1       [0m [37m
+    2020-02-24 16:36:15.063108  5  6  5  2  3
+ 
 ```
+
+- `2020-02-24 16:36:14.396442` is the time 
+- there are 5 columns (that could be 5 EEG sensor for example)
+- `5  3  4  0  1` is the first row of random values 
+- `6  3  4  0  1` is the same row, after hafvig add 1 
+
+It should be notted that of course, the hello world app plays with random data, but the real thing with timeflux is to deal with bioignal and instead of adding 1 to a time-series, it extracts interesting biomarkers. 
                                  
+## Hello 3 
+For your third iteration, here is what you will build:  
 
+<img src="img/helloworld_3.png" alt='hello_world'>
 
+```yaml
+graphs:
 
-# Use a meta-node to prototype offline
+  - id: Broker
+    nodes:
+    - id: proxy
+      module: timeflux.nodes.zmq
+      class: Broker
 
-When one is prototyping a pipeline (developping custom nodes, writting a graph, .. ), it is very usefull to be able to loop manually, allowing him to use debug breakpoints, and check that each update of each node produces the result he expects.
+  - id: Publisher
+    nodes:
+    - id: random
+      module: timeflux.nodes.random
+      class: Random
+      params:
+        columns: 2
+        seed: 1
+    - id: add
+      module: timeflux_example.nodes.arithmetic
+      class: Add
+      params:
+        value: 1
+    - id: pub_before
+      module: timeflux.nodes.zmq
+      class: Pub
+      params:
+        topic: before
+    - id: pub_after
+      module: timeflux.nodes.zmq
+      class: Pub
+      params:
+        topic: after
+    edges:
+    - source: random
+      target: add
+    - source: random
+      target: pub_before
+    - source: add
+      target: pub_after
 
-Here, we use the concept of [branch](https://doc.timeflux.io/latest/extending/branches.html) to load a graph offline and mimick the scheduler *manually*, by `setting` the input ports and `getting` the output ports. 
-
-
-```python
-from timeflux.core.registry import Registry
-Registry.cycle_start = 0
-Registry.rate = 1
-
-branch = Branch(graph=graph)
-branch.update()
-
+  - id: Subscriber
+    nodes:
+    - id: sub
+      module: timeflux.nodes.zmq
+      class: Sub
+      params:
+        topics: [ before, after ]
+    - id: monitor
+      module: timeflux_ui.nodes.ui
+      class: UI
+    edges:
+      - source: sub:before
+        target: monitor:before
+      - source: sub:after
+        target: monitor:after
 ```
 
-    DEBUG:timeflux.timeflux.nodes.debug.Display:
-                                 0  1  2  3  4
-    1969-12-31 23:59:59.000000  5  3  4  0  1
-    1969-12-31 23:59:59.333334  3  5  0  0  1
-    1969-12-31 23:59:59.666667  4  5  4  1  2
-    INFO:numexpr.utils:Note: NumExpr detected 12 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
-    INFO:numexpr.utils:NumExpr defaulting to 8 threads.
-    DEBUG:timeflux.timeflux.nodes.debug.Display:
-                                 0  1  2  3  4
-    1969-12-31 23:59:59.000000  6  4  5  1  2
-    1969-12-31 23:59:59.333334  4  6  1  1  2
-    1969-12-31 23:59:59.666667  5  6  5  2  3
-
-
-
-```python
-    branch.get_port('add', port_id='o').data
-```
-
-```
-                                0	1	2	3	4
-    1969-12-31 23:59:59.000000	6	4	5	1	2
-    1969-12-31 23:59:59.333334	4	6	1	1	2
-    1969-12-31 23:59:59.666667	5	6	5	2	3
-```
-
+Here, you use havee multiple graphs, so you need a Broker to exchange data between graphs by subscribing and publishing them. 
+There are 3 graphs in this app: Broker, Publisher, Subscriber. 
+The Publisher is very similar to the graph from hello_2 where you generate random time-series and add 1. The difference is that you replace the 'display' node by publishers. You won't see any data displayed in your terminal. But you published them in the Broker under topic names 'before' and 'after', and then, see,  the Subriber graph subribes to those topics and sends them to the UI monitoring at ports named 'before' and 'after'. So if you open adress <http://localhost:8000/monitor/> in your broser, you should see thee two timeseries, before and after having add 1. 
+To display a signal, you must select a stream and a channel in the dropdown and click in 'display' button. 
