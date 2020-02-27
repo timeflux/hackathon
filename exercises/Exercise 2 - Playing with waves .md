@@ -77,7 +77,7 @@ graphs:
 - Open a terminal 
 - Activate your environment:  
 	```
-	conda activate timeflux
+	conda activate timeflux-hackathon
 	```
 - Run the app in debug mode: 
 	```
@@ -97,7 +97,7 @@ Answer the TODO of part 1 and again, in a terminal, run:
 timeflux graphs/hello_sinus_exercise.yaml -d
 ```
 
-One solution is given [here](../graphs/hello_worlds/hello_sinus_solution_part4.yaml)
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part4.yaml)
 
 ## <a href='#part_2'>Part 2</a> : Filter a signal 
 Filter the summed signal to retrieve the carrier wave. 
@@ -111,7 +111,7 @@ timeflux graphs/hello_sinus_exercise.yaml -d
 ```
 
 
-One solution is given [here](../graphs/hello_worlds/hello_sinus_solution_part2.yaml)
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part2.yaml)
 
 <img src="img/hello_sinus_solution_part2.png" alt='hello_world'>
 
@@ -134,7 +134,7 @@ You may now open your browser at `http://localhost:8000/monitor/` and monitor yo
 <img src="img/hello_sinus.gif" alt='screenshot_part3'>
 
 
-One solution is given [here](../graphs/hello_worlds/hello_sinus_solution_part3.yaml)
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part3.yaml)
 
 <img src="img/hello_sinus_solution_part3.png" alt='graph_part3'>
 
@@ -155,10 +155,10 @@ Until here, we only had one graph running at 32 Hz. In this part, we want to sav
 In a terminal, run:
 
 ```
-timeflux graphs/hello_sinus_exercise.yaml -d
+timeflux graphs/hello_sinus/hello_sinus_exercise.yaml -d
 ```
 
-One solution is given [here](../graphs/hello_worlds/hello_sinus_solution_part4.yaml)
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part4.yaml)
 
 <img src="img/hello_sinus_solution_part4.png" alt='hello_world'>
 
