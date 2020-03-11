@@ -13,4 +13,4 @@ dependencies:
   - git+https://github.com/timeflux/timeflux_dsp  # Timeflux Digital Signal Processing library
   - git+https://github.com/timeflux/timeflux_ui # Timeflux JavaScript library and UI
   - git+https://github.com/timeflux/timeflux_bitalino  # Bitalino driver
-  - git+https://github.com/mindaffect/pymindaffectBCI # MindAffect library
+  - git+https://github.com/timeflux/timeflux_mindaffect  # MindAffect driver
