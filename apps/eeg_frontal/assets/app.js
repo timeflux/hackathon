@@ -43,7 +43,7 @@ io.on('eeg_absolute_powers', (data) => {
     // Set value
     for (let column in row) {
         let band = column.split('_')[1];
-        _td_absolute_features[band].innerHTML = row[column].toFixed(2);
+        _td_absolute_features[band].innerHTML = row[column].toFixed(5);
     }
 });
 

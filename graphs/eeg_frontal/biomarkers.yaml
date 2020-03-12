@@ -64,8 +64,8 @@ graphs:
         params:
           default: 0.
           range:
-            -1.: [[null, -100.]] # closing
-            1.: [[100., null]] # opening
+            -1.: [[null, -0.2]] # closing
+            1.: [[0.2, null]] # opening
 
       #  extract band powers
       # --------------------
@@ -79,7 +79,6 @@ graphs:
             'alpha': {frequencies: [8, 12], order: 3}
             'beta':  {frequencies: [13, 20], order: 3}
             'gamma': {frequencies: [25, 40], order: 3}
-          #          rate: 1000 # todo:  rather get from meta
           design: butter
 
       - id: band_powers
@@ -127,8 +126,8 @@ graphs:
 
     edges:
       - source: sub:bitalino
-#        target: convert
-#      - source: convert
+        target: convert
+      - source: convert
         target: select
       - source: select
         target: ui:eeg_raw
