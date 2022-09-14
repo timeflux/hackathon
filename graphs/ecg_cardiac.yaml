@@ -1,6 +1,0 @@
-import:
-  - broker.yaml
-#  - bitalino.yaml # comment this line to run on replayed data
-  - ecg_cardiac/replay.yaml # comment this line to run with bitalino device
-  - ecg_cardiac/biomarkers.yaml
-  - ecg_cardiac/save.yaml

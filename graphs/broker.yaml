@@ -1,6 +1,0 @@
-graphs:
-  - id: broker
-    nodes:
-      - id: broker
-        module: timeflux.nodes.zmq
-        class: Broker

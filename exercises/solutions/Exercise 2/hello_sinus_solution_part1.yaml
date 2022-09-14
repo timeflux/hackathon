@@ -1,0 +1,46 @@
+graphs:
+  - id: hello_sinus
+    nodes:
+      - id: noisy_sinus
+        module: timeflux_audio.nodes.signal
+        class: Additive
+        params: 
+          frequencies: [1, 50] # Frequency of signal (1Hz) and line noise (50Hz)
+          resolution: 128 # Sampling rate of the signal (128Hz)
+          amplitudes:  [1, 0.2] # Amplitudes of signal (1) and line noise (0.2)
+          name: noisy
+
+      # part 1
+      - id: lowpass
+        module: timeflux_dsp.nodes.filters
+        class: IIRFilter
+        params:
+          frequencies: [2]
+          order: 3
+          filter_type: lowpass
+
+      # part 2
+      # TODO: add an UI to monitor the signal before and after filtering
+
+      # part 4
+      # TODO: Add a route in the UI to your own app
+
+      # for debug purpose
+      # -----------------
+      - id: display
+        module: timeflux.nodes.debug
+        class: Display
+    edges:
+#      # part 1
+      - source: noisy_sinus
+        target: lowpass
+      - source: lowpass
+        target: display
+
+      # part 2
+      # TODO: plug the signals to the UI
+
+    rate: 32
+
+  # part 3
+  # TODO: Create a second graph to save the data into a file
