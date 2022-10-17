@@ -1,30 +1,29 @@
-# Hack yourself! 
-## NeurotechX & Timeflux @ 42
-[Timeflux](https://timeflux.io) is an open-source Python framework for building BCI
+# Hack yourself!
 
-The event will take place at 42, on March 13-15. It will be preceded by one full day of
-basic neurophysiological / BCI theory and by a Timeflux practical workshop on February 26.
+## NeuroTechX & Timeflux @ 42
 
+[Timeflux](https://timeflux.io) is an open-source Python framework for acquiring and processing biosignals in real-time.
 
-Thanks to everybody for making this event possible:
+The event happen online and at select venues accross the world. In Paris, it will take place at 42, on October 28-30, 2022. It will be preceded by a workshop on October 20.
 
-- [Bitalino](https://www.mbed.com/en/) for sponsoring the biosignal (ECG, EMG, frontal EEG) hardware, 
-- [NeurotechX/Coglab](https://neurotechx.com/) for the talks and staff  
-- **[42 School of course](https://www.42.fr/)** (especially Sophie, Benny, Fabienne and Charles) for support, accomodation & co! 
+More information:
+- [In-person event, in Paris](https://coglab.fr/ntxhack2022/)
+- [Online event, anywhere](https://neurotechx.com/hackathon2022/)
 
 ## Organization 
+
 ### Hack your mind and body
 
 - **Team up**
-- Select the **input** (brain, heart, muscle)
-- We provide **plug-and-play** processing **pipelines** (but you can make your own if you feel adventurous)
+- Select the **input** (brain, heart, muscle, data)
+- We provide **plug-and-play** processing **pipelines** (but you can make your own if you feel like it)
 - **Connect** everything (0MQ, Websockets, OSC, LSL)
 - Build the **output** (Python, JavaScript, Unity, Arduino, other)
 - Have **fun**!
 
+## Masterclass materiel 
 
-# Masterclass materiel 
-## Installation
+### Installation
 
 Follow the guidelines from this [Getting started](https://doc.timeflux.io/latest/usage/getting_started.html). 
 
@@ -49,7 +48,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Exercices
+### Exercices
 Here, you'll find the material for the Masterclass exercises: 
 
 - [Exercise 1](exercises/Exercise 1 - Your very first graph.md): Run your very first graph with timeflux
@@ -80,19 +79,21 @@ It's all in the [demos repository](https://github.com/timeflux/demos)
 - [Roshambo EMG gesture detection](https://github.com/timeflux/demos/tree/main/roshambo) 
 - [EEG bands neurofeedback](https://github.com/timeflux/demos/tree/main/neurofeedback/bands) 
 
-# Getting help 
-## Community
+## Getting help 
+
+### Community
 - [Timeflux slack](https://timeflux.slack.com/join/shared_invite/enQtNjM1MDA1MTI1MTU1LWFjNGQxYmY0ZDgxMDI5MWU3ZDE2ZDMyYjBiNGNjMGZmNmNkNDAzNjM0NmE0MDY3ZWM3MGIzZTFiZjA5ZDNmYjM)
 - [NeurotechX slack](https://neurotechx.com/slack/) 
 - Or email us a name@imeflux.io with name being pierre, raphaelle, sylvain, .. (depending on your needs !) 
 
-## Helpful Links
+### Helpful Links
 - To have a better understanding of digial signal processing, [Raphael Vallat website](https://raphaelvallat.com/) is very nice.
 - List of BCI-related ressource by NTX [here](https://github.com/NeuroTechX/awesome-bci)
 - In [Neurotechedu](http://learn.neurotechedu.com/lessons/), you will find our educational content grouped by related clusters
 - Timefluw documentation [here](https://doc.timeflux.io/latest/)
 
 ## Pitffalls
+
 ### Timeflux 
 
 
