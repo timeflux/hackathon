@@ -7,13 +7,12 @@ The goal is for you to get acquainted with this syntax.
 ## Exercise statement
 In this exercise, you will : 
 
-1. generate two sinus waves (this has already been done for you) <br>
-2. sum this two signals (this is [Part 1](#part_1))
-3. lowpass the summed signal (this is [Part 2](#part_2))
-4.  display the signal using the UI monitoring (this is [Part 3](#part_3))
-5. save the data in a HDF5 file (this is [Part 4](#part_4))
-6. design a feedback with timeflux.js (this is [Part 5](#part_5))
-7. *(bonus) play around with parameters*
+1. generate a noisy signal : sum a carrier wave of 1Hz and line noie of 50Hz (this has already been done for you) <br>
+1. lowpass the summed signal (this is [Part 1](#part_1))
+1. display the signal using the UI monitoring (this is [Part 2](#part_2))
+1. save the data in a HDF5 file (this is [Part 3](#part_3))
+1. design a feedback with timeflux.js (this is [Part 4](#part_4))
+1. *(bonus) play around with parameters*
 
 ## Getting started
 
@@ -25,51 +24,43 @@ First, let's have a look at the graph.
 graphs:
   - id: hello_sinus
     nodes:
-      - id: carrier_sinus
-        module: timeflux_example.nodes.sinus
-        class: Sinus
-        params:
-          rate: .5
-          amplitude: 1
-
-      - id: noise_sinus
-        module: timeflux_example.nodes.sinus
-        class: Sinus
-        params:
-          rate: 5
-          amplitude: .1
+      - id: noisy_sinus
+        module: timeflux_audio.nodes.signal
+        class: Additive
+        params: 
+          frequencies: [1, 50] # Frequency of signal (1Hz) and line noise (50Hz)
+          resolution: 128 # Sampling rate of th signal (128Hz)
+          amplitudes:  [1, 0.2] # Amplitudes of signal (1) and line noise (0.2)
+          name: noisy
 
       - id: display
         module: timeflux.nodes.debug
         class: Display
 
       # part 1
-      # TODO: add a node that adds the two sinus
-      # Hint:  https://doc.timeflux.io/latest/api/timeflux_example.nodes.arithmetic.html
-
-      # part 2
       # TODO: add a lowpass filter to filter the summed signal
       # Hint: https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html
 
-      # part 3
+      # part 2
       # TODO: add an UI to monitor the signal before and after filtering
+      
+      # part 4
+      # TODO: Add a route in the UI to your own app
 
     edges:
-      - source: carrier_sinus
+      - source: noisy_sinus
         target: display
-      #      - source:
-      #        target:
-      #       part 1: TODO: plug the noise and carrier sinus to the input ports of your summation node
 
+      # part 1
+      # TODO: plug the noisy signal to the filter
 
-      #      # part 2
-      # TODO: plug the summed signal to the filter
-
-      # part 3
+      # part 2
       # TODO: plug the signals to the UI
 
     rate: 32
 
+  # part 3
+  # TODO: Create a second graph to save the data into a file
 ```
 
 
@@ -81,15 +72,13 @@ graphs:
 	```
 - Run the app in debug mode: 
 	```
-	timeflux -d graphs/hello_worlds/hello_sinus_exercise.yaml	```
+	timeflux -d "exercises/solutions/Exercise 2/hello_sinus_exercise.yaml"
+  ```
 
-## <a href='#part_1'>Part 1</a> : Sum two signals
+## <a href='#part_1'>Part 1</a> : Filter a signal 
+Filter the summed signal to retrieve the carrier wave. 
 
-Sum the carrier and noise wave using the multi input ports.
-
-**Hint:  [Have a look at arithmetic node](https://doc.timeflux.io/latest/api/timeflux_example.nodes.arithmetic.html)**
-
-<img src="img/hello_sinus_solution_part1.png" alt='hello_world'>
+**Hint:** Have a look at [this](https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html) piece of doc.
 
 Answer the TODO of part 1 and again, in a terminal, run:
 
@@ -97,32 +86,19 @@ Answer the TODO of part 1 and again, in a terminal, run:
 timeflux graphs/hello_sinus_exercise.yaml -d
 ```
 
-One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part4.yaml)
 
-## <a href='#part_2'>Part 2</a> : Filter a signal 
-Filter the summed signal to retrieve the carrier wave. 
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part1.yaml)
 
-**Hint:** Have a look at [this](https://doc.timeflux.io/latest/api/timeflux_dsp.nodes.filters.html) piece of doc.
-
-Answer the TODO of part 2 and again, in a terminal, run:
-
-```
-timeflux graphs/hello_sinus_exercise.yaml -d
-```
-
-
-One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part2.yaml)
-
-<img src="img/hello_sinus_solution_part2.png" alt='hello_world'>
+<img src="img/hello_sinus_solution_part1.png" alt='hello_world'>
 
 
 
-## <a href='#part_3'>Part 3</a> :  Visualize the signals   
+## <a href='#part_2'>Part 2</a> :  Visualize the signals   
 Use timeflux UI monitoring to display pre/post signals in your browser.
 
 **Hint:** [Here](https://doc.timeflux.io/latest/api/timeflux_ui.nodes.ui.html) is the doc.
 
-Answer the TODO of part 3 and again, in a terminal, run:
+Answer the TODO of part 2 and again, in a terminal, run:
 
 ```
 timeflux graphs/hello_sinus_exercise.yaml -d
@@ -131,12 +107,12 @@ timeflux graphs/hello_sinus_exercise.yaml -d
 You may now open your browser at `http://localhost:8000/monitor/` and monitor your time-series ! 
 
 
-<img src="img/hello_sinus.gif" alt='screenshot_part3'>
+<img src="img/hello_sinus.gif" alt='screenshot_part2'>
 
 
-One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part3.yaml)
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part2.yaml)
 
-<img src="img/hello_sinus_solution_part3.png" alt='graph_part3'>
+<img src="img/hello_sinus_solution_part2.png" alt='graph_part2'>
 
 
 ## <a href='#part_4'>Part 4</a> : Save your data in HDF5
@@ -158,9 +134,9 @@ In a terminal, run:
 timeflux graphs/hello_sinus/hello_sinus_exercise.yaml -d
 ```
 
-One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part4.yaml)
+One solution is given [here](../graphs/hello_sinus/hello_sinus_solution_part3.yaml)
 
-<img src="img/hello_sinus_solution_part4.png" alt='hello_world'>
+<img src="img/hello_sinus_solution_part3.png" alt='hello_world'>
 
 ## <a href='#part_5'>Part 5</a> : Design a feedback with timeflux.js  
 

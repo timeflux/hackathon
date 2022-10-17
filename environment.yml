@@ -4,14 +4,11 @@ channels:
   - defaults
 dependencies:
 - pip>=19.3
-- scikit-learn==0.22.0
-- scipy==1.3.1
-- pyglet
 - pip:
   - git+https://github.com/timeflux/timeflux  # Timeflux core
   - git+https://github.com/timeflux/timeflux_example # Example plugin
+  - git+https://github.com/timeflux/timeflux_audio # Audio plugin
+  - git+https://github.com/timeflux/timeflux_demos # Graphs and modules of the demos 
   - git+https://github.com/timeflux/timeflux_dsp  # Timeflux Digital Signal Processing library
   - git+https://github.com/timeflux/timeflux_ui # Timeflux JavaScript library and UI
   - git+https://github.com/timeflux/timeflux_bitalino  # Bitalino driver
-  - git+https://github.com/timeflux/timeflux_openbci  # OpenBCI driver
-  - git+https://github.com/timeflux/timeflux_mindaffect  # MindAffect gateway

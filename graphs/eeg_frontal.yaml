@@ -1,6 +1,0 @@
-import:
-  - broker.yaml
-#  - bitalino.yaml # comment this line to run on replayed data
-  - eeg_frontal/replay.yaml # comment this line to run with bitalino device
-  - eeg_frontal/biomarkers.yaml
-  - eeg_frontal/save.yaml

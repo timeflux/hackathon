@@ -1,0 +1,102 @@
+graphs:
+  - id: broker
+    nodes:
+      - id: broker
+        module: timeflux.nodes.zmq
+        class: Broker
+
+  - id: hello_sinus
+    nodes:
+      - id: noisy_sinus
+        module: timeflux_audio.nodes.signal
+        class: Additive
+        params: 
+          frequencies: [.5, 50] # Frequency of signal (1Hz) and line noise (50Hz)
+          resolution: 128 # Sampling rate of the signal (128Hz)
+          amplitudes:  [1, 0.2] # Amplitudes of signal (1) and line noise (0.2)
+          name: noisy
+
+      # part 1
+      - id: lowpass
+        module: timeflux_dsp.nodes.filters
+        class: IIRFilter
+        params:
+          frequencies: [2]
+          order: 3
+          filter_type: lowpass
+
+      # part 2
+      - id: ui
+        module: timeflux_ui.nodes.ui
+        class: UI
+        params:
+          routes: # part 4
+            hello_sinus: app # now open http://localhost:8000/hello_sinus
+
+      # part 3
+      - id: pub_noisy
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: noisy
+      - id: pub_lowpassed
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: lowpassed
+      - id: pub_events
+        module: timeflux.nodes.zmq
+        class: Pub
+        params:
+          topic: events
+
+      # part 4
+      # TODO: Add a route in the UI to your own app
+
+      # for debug purpose
+      # -----------------
+      - id: display
+        module: timeflux.nodes.debug
+        class: Display
+    edges:
+      # part 1
+      - source: noisy_sinus
+        target: lowpass
+
+      # part 2
+      - source: noisy_sinus
+        target: ui:noisy
+      - source: lowpass
+        target: ui:lowpassed
+    
+      # part 3 
+      - source: noisy_sinus
+        target: pub_noisy
+      - source: lowpass
+        target: pub_lowpassed
+
+    rate: 32
+
+  - id: save
+    nodes:
+      - id: sub
+        module: timeflux.nodes.zmq
+        class: Sub
+        params:
+          topics: [noisy, lowpased, events] 
+      - id: save
+        module: timeflux.nodes.hdf5
+        class: Save
+        params:
+          path: data/hello_data # directory where you data will be saved
+
+    edges:
+      - source: sub:noisy
+        target: save:noisy # will be saved in hdf( key '/noisy'
+
+      - source: sub:lowpassed
+        target: save:lowpassed # will be saved in hdf( key '/lowpassed'
+
+      - source: sub:events
+        target: save:events # will be stored in hdf( key '/events'
+    rate: 1 # save stuff once per second
