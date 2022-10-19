@@ -2,7 +2,8 @@
 
 
 ## Hello 1
-For your first iteration, here is what you will build:  
+For your first iteration, you will build an app that generates random data, then add 1 and finally display in the console. 
+Here is how the graph will look like : 
 
 <img src="img/helloworld_1.png" alt='hello_world'>
 
@@ -52,7 +53,8 @@ and launch the app in debug (`-d` mode) :
 This will display in your terminal Dataframe with random values at which you added 1. The index of the DataFrame is the time, that is why we call it a 'time-series'.
 
 ## Hello 2 
-For your second iteration, here is what you will build:  
+For your second iteration, you will display the data after *and* before adding 1. 
+Here is how the graph will look like : 
 
 <img src="img/helloworld_2.png" alt='hello_world'>
 
@@ -128,20 +130,14 @@ See bellow the kind of display you get:
 It should be notted that of course, the hello world app plays with random data, but the real thing with timeflux is to deal with bioignal and instead of adding 1 to a time-series, it extracts interesting biomarkers. 
                                  
 ## Hello 3 
-For your third iteration, here is what you will build:  
+For your third iteration, we use the UI monitor to show the signal (before and after adding 1). You just need to change the "Display" node into "UI".   
+Here is how the graph will look like : 
 
 <img src="img/helloworld_3.png" alt='hello_world'>
 
 ```yaml
 graphs:
-
-  - id: Broker
-    nodes:
-    - id: proxy
-      module: timeflux.nodes.zmq
-      class: Broker
-
-  - id: Publisher
+  - id: WithMonitoring
     nodes:
     - id: random
       module: timeflux.nodes.random
@@ -154,44 +150,21 @@ graphs:
       class: Add
       params:
         value: 1
-    - id: pub_before
-      module: timeflux.nodes.zmq
-      class: Pub
-      params:
-        topic: before
-    - id: pub_after
-      module: timeflux.nodes.zmq
-      class: Pub
-      params:
-        topic: after
+      
+    - id: monitor
+      module: timeflux_ui.nodes.ui
+      class: UI
+
     edges:
     - source: random
       target: add
     - source: random
-      target: pub_before
+      target: monitor:before
     - source: add
-      target: pub_after
-
-  - id: Subscriber
-    nodes:
-    - id: sub
-      module: timeflux.nodes.zmq
-      class: Sub
-      params:
-        topics: [ before, after ]
-    - id: monitor
-      module: timeflux_ui.nodes.ui
-      class: UI
-    edges:
-      - source: sub:before
-        target: monitor:before
-      - source: sub:after
-        target: monitor:after
+      target: monitor:after
 ```
 
-Here, you use have multiple graphs, so you need a Broker to exchange data between graphs by subscribing and publishing them. 
-
-There are 3 graphs in this app: Broker, Publisher, Subscriber. 
-
-The Publisher is very similar to the graph from hello_2 where you generate random time-series and add 1. The difference is that you replace the 'display' node by publishers. You won't see any data displayed in your terminal. But you published them in the Broker under topic names 'before' and 'after', and then, see,  the Subriber graph subribes to those topics and sends them to the UI monitoring at ports named 'before' and 'after'. So if you open adress <http://localhost:8000/monitor/> in your broser, you should see thee two timeseries, before and after having add 1. 
+So if you open adress <http://localhost:8000/monitor/> in your broser, you should see thee two timeseries, before and after having add 1. 
 To display a signal, you must select a stream and a channel in the dropdown and click in 'display' button. 
+
+ <img src="img/helloworld_ui.gif" width="60%">
