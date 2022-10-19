@@ -49,10 +49,7 @@ graphs:
         class: Pub
         params:
           topic: events
-
-      # part 4
-      # TODO: Add a route in the UI to your own app
-
+          
       # for debug purpose
       # -----------------
       - id: display
