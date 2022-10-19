@@ -1,7 +1,6 @@
 git+https://github.com/timeflux/timeflux  # Timeflux core
 git+https://github.com/timeflux/timeflux_example # Example plugin
 git+https://github.com/timeflux/timeflux_audio # Audio plugin
-git+https://github.com/timeflux/demos # Graphs and modules of the demos 
 git+https://github.com/timeflux/timeflux_dsp  # Timeflux Digital Signal Processing library
 git+https://github.com/timeflux/timeflux_ui # Timeflux JavaScript library and UI
 git+https://github.com/timeflux/timeflux_bitalino  # Bitalino driver
